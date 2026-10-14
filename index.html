@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mundos IA - Simulador</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🌍 Mundos IA</h1>
+    <p>Elige o crea un mundo interactivo</p>
+  </header>
+
+  <main>
+    <!-- Configuración del Mundo -->
+    <section class="card">
+      <h2>1. Configura tu Mundo</h2>
+      <label for="world-prompt">Describe la temática o historia de tu mundo:</label>
+      <textarea id="world-prompt" rows="3" placeholder="Ej: Eres un superviviente en una nave espacial a la deriva..."></textarea>
+      
+      <label for="api-key">Tu API Key de Gemini:</label>
+      <input type="password" id="api-key" placeholder="Pega aquí tu clave API">
+      <button onclick="startWorld()">🚀 Comenzar Mundo</button>
+    </section>
+
+    <!-- Chat / Interacción de la historia -->
+    <section class="card" id="game-section" style="display:none;">
+      <h2>2. Aventura Interactiva</h2>
+      <div id="story-box"></div>
+      
+      <div class="input-group">
+        <input type="text" id="user-input" placeholder="¿Qué quieres hacer o decir?">
+        <button onclick="sendAction()">Enviar</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
