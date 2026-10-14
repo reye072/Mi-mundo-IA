@@ -23,82 +23,46 @@
   <!-- Contenido Principal -->
   <main class="main-container">
 
-    <!-- VISTA EXPLORAR -->
+    <!-- VISTA EXPLORAR (Inicio directo con todo el catálogo) -->
     <section id="view-explore" class="app-view active">
       <div class="spotlight-card">
-        <span class="spotlight-tag">🌟 DESTACADO</span>
-        <h2>Simulador de Supervivencia Extrema</h2>
-        <p>Tus decisiones escriben el destino en un mundo colapsado.</p>
-        <button class="btn-main-action" onclick="openWorldDetail('zombie')">▶ Entrar al Mundo</button>
+        <span class="spotlight-tag">🌟 EXPLORA EL UNIVERSO</span>
+        <h2>Simulaciones sin Censura</h2>
+        <p>Elige tu historia de terror, anime, leyendas o novelas y toma el control.</p>
       </div>
 
       <div class="genre-chips">
-        <button class="chip active">Explorar</button>
-        <button class="chip">Terror</button>
-        <button class="chip">Supervivencia</button>
-        <button class="chip">Romance</button>
+        <button class="chip active" onclick="filterWorlds('all')">Todos</button>
+        <button class="chip" onclick="filterWorlds('terror')">Terror & Gore</button>
+        <button class="chip" onclick="filterWorlds('anime')">Anime</button>
+        <button class="chip" onclick="filterWorlds('leyendas')">Leyendas</button>
+        <button class="chip" onclick="filterWorlds('novela')">Novelas</button>
       </div>
 
-      <h3 class="section-heading">Mundos Disponibles</h3>
-      <div class="worlds-custom-grid">
-        <div class="world-bubble-card" onclick="openWorldDetail('zombie')">
-          <div class="bubble-banner" style="background-image: url('https://picsum.photos/300/200?random=10');">
-            <span class="bubble-badge">🔥 97K</span>
-          </div>
-          <div class="bubble-info">
-            <h4>The Walking Dead</h4>
-            <p>Supervivencia y zombis sin censura.</p>
-          </div>
-        </div>
-
-        <div class="world-bubble-card" onclick="openWorldDetail('lastofus')">
-          <div class="bubble-banner" style="background-image: url('https://picsum.photos/300/200?random=20');">
-            <span class="bubble-badge">⭐ 4.9</span>
-          </div>
-          <div class="bubble-info">
-            <h4>The Last of Us</h4>
-            <p>Infección, refugios y decisiones límite.</p>
-          </div>
-        </div>
+      <h3 class="section-heading">Mundos Disponibles para Elegir</h3>
+      <div class="worlds-custom-grid" id="worldsGridContainer">
+        <!-- Se llena automáticamente al entrar -->
       </div>
     </section>
 
     <!-- VISTA DETALLE DEL MUNDO -->
     <section id="view-world-detail" class="app-view">
-      <button class="btn-return" onclick="switchTab('explore')">← Volver al inicio</button>
+      <button class="btn-return" onclick="switchTab('explore')">← Volver a elegir mundo</button>
       <div class="world-hero-box" id="detailBanner"></div>
       <div class="world-info-content">
         <h2 id="detailTitle">Título del Mundo</h2>
         <span class="world-author">Creado por Oficial SimulO</span>
         <p id="detailDesc" class="world-description"></p>
-        <button class="btn-main-action" onclick="startNewSimulation()">▶ Iniciar Simulación (50 Turnos)</button>
+        <button class="btn-main-action" onclick="startNewSimulation()">▶ Iniciar Partida (50 Turnos)</button>
       </div>
 
-      <h3 class="section-heading">Personajes Clave</h3>
+      <h3 class="section-heading">Personajes y Bots en este Mundo</h3>
       <div class="char-scroll-list" id="charactersList"></div>
-
-      <h3 class="section-heading">Herramientas de Juego</h3>
-      <div class="toolbox-grid">
-        <div class="tool-card">
-          <span class="tool-emoji">📝</span>
-          <div>
-            <h5>Acción Libre</h5>
-            <p>Escribe tu diálogo o movimiento.</p>
-          </div>
-        </div>
-        <div class="tool-card">
-          <span class="tool-emoji">💬</span>
-          <div>
-            <h5>Diálogos con IA</h5>
-            <p>Interacción fluida sin filtros.</p>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- VISTA HISTORIAL -->
     <section id="view-history" class="app-view">
-      <h2 class="section-heading">Mis Partidas Guardadas</h2>
+      <h2 class="section-heading">Tus Partidas Guardadas</h2>
       <div class="history-container" id="historyList"></div>
     </section>
 
@@ -125,7 +89,7 @@
     <!-- VISTA JUEGO / CHAT -->
     <section id="view-game" class="app-view">
       <div class="game-header-bar">
-        <button class="btn-return" onclick="switchTab('history')">← Guardar</button>
+        <button class="btn-return" onclick="switchTab('explore')">← Cambiar de Mundo</button>
         <span class="game-turns-pill" id="gameTurnsCounter">Turnos: 50</span>
       </div>
       <div class="chat-viewport" id="chatBox"></div>
@@ -140,8 +104,8 @@
   <!-- Modal Tienda / Zaps -->
   <div class="modal-overlay" id="shopModal">
     <div class="modal-box">
-      <h3>Recarga de Zaps & Turnos</h3>
-      <p>Ve un anuncio publicitario simulado para reclamar +15 turnos acumulables.</p>
+      <h3>Recarga de Turnos</h3>
+      <p>Mira un anuncio simulado para reclamar +15 turnos acumulables.</p>
       <button class="btn-main-action" onclick="watchAdReward()">📺 Ver Anuncio (+15 Turnos)</button>
       <button class="btn-cancel-modal" onclick="closeShopModal()">Cerrar</button>
     </div>
@@ -151,13 +115,13 @@
   <nav class="bottom-tabbar">
     <button class="tab-btn active" onclick="switchTab('explore')">
       <span class="tab-icon">🏠</span>
-      <span>Inicio</span>
+      <span>Mundos</span>
     </button>
     <button class="tab-btn" onclick="switchTab('history')">
       <span class="tab-icon">📖</span>
-      <span>Partidas</span>
+      <span>Historial</span>
     </button>
-    <button class="tab-btn center-plus-btn" onclick="startNewSimulation()">
+    <button class="tab-btn center-plus-btn" onclick="switchTab('explore')">
       <span>+</span>
     </button>
     <button class="tab-btn" onclick="switchTab('profile')">
