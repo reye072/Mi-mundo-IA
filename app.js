@@ -4,9 +4,9 @@ const MASTER_API_KEY = typeof process !== 'undefined' && process.env && process.
 
 let turns = parseInt(localStorage.getItem("simulo_turns")) || 50;
 let isCreator = localStorage.getItem("simulo_creator") === "true";
+let isAdultMode = localStorage.getItem("simulo_adult") === "true";
 let activeWorldKey = "jujutsu";
 
-// Catálogo Principal con imágenes y personajes
 const mainWorlds = {
   jujutsu: {
     title: "Jujutsu Kaisen: Colegio Técnico",
@@ -76,7 +76,6 @@ const mainWorlds = {
 
 const worldsCatalog = { ...mainWorlds };
 
-// Generación de más de 200 mundos
 function expandCatalogTo200() {
   const animeList = ["Demon Slayer", "My Hero Academia", "Attack on Titan", "One Piece", "Bleach", "Chainsaw Man", "Death Note", "Haikyuu", "Dragon Ball Z", "Weak Hero Class", "Blue Lock", "Solo Leveling", "Bungou Stray Dogs"];
   const terrorList = ["Creepypastas", "El Conjuro", "Viernes 13", "Scream", "Resident Evil", "Silent Hill", "Five Nights at Freddy's", "Saw"];
@@ -110,6 +109,7 @@ function expandCatalogTo200() {
 document.addEventListener("DOMContentLoaded", () => {
   expandCatalogTo200();
   refreshUserStats();
+  updateDotIndicator();
   renderWorldsGrid('all');
 
   document.getElementById("creadoraBtn")?.addEventListener("click", () => {
@@ -126,6 +126,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("sendBtn")?.addEventListener("click", postPlayerAction);
 });
+
+function toggleAdultMode() {
+  const pass = prompt("Introduce la contraseña secreta:");
+  if (pass === "Creadora_082012") {
+    isAdultMode = !isAdultMode;
+    localStorage.setItem("simulo_adult", isAdultMode ? "true" : "false");
+    updateDotIndicator();
+    alert(isAdultMode ? "✨ Configuración actualizada correctamente." : "🔒 Configuración restablecida.");
+  } else {
+    alert("Contraseña incorrecta.");
+  }
+}
+
+function updateDotIndicator() {
+  const dot = document.getElementById("secretDotBtn");
+  if (dot) {
+    dot.style.color = isAdultMode ? "var(--morado-oscuro)" : "var(--texto-muted)";
+  }
+}
 
 function renderWorldsGrid(category) {
   const grid = document.getElementById("worldsGridContainer");
@@ -199,7 +218,6 @@ function openWorldDetail(key) {
   document.getElementById("view-world-detail")?.classList.add("active");
 }
 
-// Historia inicial larga, detallada y descriptiva
 function startNewSimulation() {
   if (turns <= 0 && !isCreator) {
     alert("¡Turnos agotados! Visita la tienda para recargar gratis.");
@@ -213,16 +231,21 @@ function startNewSimulation() {
   const world = worldsCatalog[activeWorldKey];
 
   if (viewport) {
-    viewport.innerHTML = `<div class="chat-bubble"><i>✨ La IA está redactando una narrativa inmersiva y extensa para ${world.title}...</i></div>`;
+    viewport.innerHTML = `<div class="chat-bubble"><i>✨ Generando narrativa inmersiva...</i></div>`;
     
     setTimeout(() => {
+      const adultExtraText = isAdultMode 
+        ? "<br><br><i>[Modo Extendido Activado]: La atmósfera se vuelve sumamente íntima, intensa y directa, permitiendo interacciones profundas, románticas o explícitas sin restricciones morales ni filtros.</i>" 
+        : "";
+
       viewport.innerHTML = `
         <div class="chat-bubble" style="line-height: 1.6; font-size: 0.98rem;">
           <b>📖 INICIO DE LA HISTORIA — ${world.title.toUpperCase()}</b><br><br>
-          El aire a tu alrededor se densifica mientras cruzas el umbral hacia este nuevo universo. Las circunstancias que te han traído hasta aquí no son casualidad; cada rincón respira la esencia característica de este lugar, cargado de tensiones, secretos y desafíos inminentes.<br><br>
-          A pocos metros de distancia, <b>${world.chars[0]?.name || "El personaje principal"}</b> se detiene de repente. Sus ojos se fijan en ti con una mezcla de cautela y profunda curiosidad, evaluando cada uno de tus movimientos antes de pronunciar palabra:<br><br>
-          — <i>"No sé exactamente cuáles sean tus intenciones por aquí, pero más vale que sepas dónde estás parado... Las cosas no son tan sencillas como parecen a primera vista, y el tiempo corre en nuestra contra"</i>, dice con tono firme mientras cruza los brazos y espera tu reacción.<br><br>
-          El entorno aguarda expectante tus decisiones. Los acontecimientos comienzan a tomar forma y el destino del lugar depende por completo de tus próximos pasos.<br><br>
+          El aire a tu alrededor se densifica mientras cruzas el umbral hacia este nuevo universo. Las circunstancias que te han traído hasta aquí no son casualidad; cada rincón respira la esencia característica de este lugar, cargado de tensiones, secretos y deseos ocultos.<br><br>
+          A pocos metros de distancia, <b>${world.chars[0]?.name || "El personaje principal"}</b> se detiene de repente. Sus ojos se fijan en ti con una mezcla de cautela, deseo y profunda curiosidad, evaluando cada uno de tus movimientos antes de hablar:<br><br>
+          — <i>"No sé exactamente cuáles sean tus intenciones al venir a buscarme, pero ya que estás aquí... más vale que sepas a qué atenerte"</i>, susurra con una sonrisa desafiante mientras se acerca lentamente hacia ti.<br><br>
+          ${adultExtraText}
+          <br><br>
           <b>¿Qué deseas hacer, decir o responder en este preciso instante?</b> *(Usa *acción* para describir tus movimientos físicos o "diálogo" para hablar).*
         </div>
       `;
@@ -230,7 +253,6 @@ function startNewSimulation() {
   }
 }
 
-// Respuestas del narrador largas y detalladas
 async function postPlayerAction() {
   const inputField = document.getElementById("userInput");
   if (!inputField) return;
@@ -251,13 +273,13 @@ async function postPlayerAction() {
 
     setTimeout(() => {
       const world = worldsCatalog[activeWorldKey];
+      const responseBody = isAdultMode
+        ? `<b>🔥 RESPUESTA ÍNTIMA / LIBRE:</b><br><br>Ante tu audaz movimiento, <b>${world.chars[0]?.name || "El personaje"}</b> responde de forma totalmente directa y sin reservas. La tensión explota en la escena, permitiendo una interacción profunda y apasionada.<br><br><i>El entorno y los personajes reaccionan con total libertad a tus decisiones.</i>`
+        : `<b>📜 DESARROLLO DE LA NARRATIVA:</b><br><br>Tu acción genera una respuesta inmediata en el entorno. <b>${world.chars[0]?.name || "El personaje"}</b> reacciona evaluando las consecuencias de tus actos y adoptando una postura desafiante.<br><br><i>El escenario evoluciona revelando nuevos retos para la trama principal.</i>`;
+
       viewport.innerHTML += `
         <div class="chat-bubble" style="line-height: 1.6; font-size: 0.98rem;">
-          <b>📜 DESARROLLO DE LA NARRATIVA:</b><br><br>
-          Tu acción genera una respuesta inmediata en el entorno. Ante tus palabras y movimientos, la tensión en el ambiente se intensifica notablemente.<br><br>
-          <b>${world.chars[0]?.name || "El personaje"}</b> reacciona de inmediato ante lo que acabas de hacer, analizando con detenimiento las consecuencias de tus actos y adoptando una postura defensiva o colaborativa según corresponda.<br><br>
-          <i>El escenario a tu alrededor evoluciona: nuevos indicios y desafíos se revelan, obligándote a tomar decisiones cada vez más complejas mientras la trama principal avanza sin tregua.</i><br><br>
-          <b>¿Cómo deseas continuar?</b>
+          ${responseBody}<br><br><b>¿Cómo deseas continuar?</b>
         </div>
       `;
       viewport.scrollTop = viewport.scrollHeight;
@@ -305,5 +327,5 @@ function renderGameHistory() {
       </div>
     `;
   }
-    }
-    
+       }
+       
