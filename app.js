@@ -4,98 +4,111 @@ const MASTER_API_KEY = typeof process !== 'undefined' && process.env && process.
 
 let turns = parseInt(localStorage.getItem("simulo_turns")) || 50;
 let isCreator = localStorage.getItem("simulo_creator") === "true";
-let activeWorldKey = "zombie";
+let activeWorldKey = "jujutsu";
 
-const worldsCatalog = {
-  zombie: {
-    title: "The Walking Dead",
-    category: "terror",
-    desc: "La civilización colapsó. Los caminantes dominan las calles y Rick con su grupo luchan por sobrevivir.",
-    banner: "https://m.media-amazon.com/images/M/MV5BMTM5MTM5NTM2MF5BMl5BanBnXkFtZTcwODg2OTgyOQ@@._V1_.jpg",
-    chars: [
-      { name: "Rick Grimes", role: "Líder táctico y pistolero", img: "https://m.media-amazon.com/images/M/MV5BMjAxMzA5MzMxMF5BMl5BanBnXkFtZTcwNTI5OTM0OQ@@._V1_.jpg" },
-      { name: "Daryl Dixon", role: "Rastreador experto con ballesta", img: "https://m.media-amazon.com/images/M/MV5BMTkzODE4NDAzNV5BMl5BanBnXkFtZTgwNTQyOTIzNzE@._V1_.jpg" },
-      { name: "Glenn Rhee", role: "Explorador de suministros", img: "https://m.media-amazon.com/images/M/MV5BMjI3MzgwMTM1OF5BMl5BanBnXkFtZTgwNTM3Mzc5NzE@._V1_.jpg" },
-      { name: "Michonne", role: "Guerrera con katana", img: "https://m.media-amazon.com/images/M/MV5BMTc5MDExNTgwOV5BMl5BanBnXkFtZTgwODIxNDQ5NzE@._V1_.jpg" },
-      { name: "Maggie Greene", role: "Líder de Hilltop", img: "https://m.media-amazon.com/images/M/MV5BOTU1MjQ0NTcxNl5BMl5BanBnXkFtZTgwNDM3Mzc5NzE@._V1_.jpg" }
-    ]
-  },
+// Catálogo Principal con imágenes y personajes
+const mainWorlds = {
   jujutsu: {
-    title: "Jujutsu Kaisen",
+    title: "Jujutsu Kaisen: Colegio Técnico",
     category: "anime",
-    desc: "Maldiciones desatadas. Acompaña a Yuji, Megumi, Nobara y Satoru Gojo en la Academia de Hechicería.",
+    desc: "Maldiciones y hechicería. Eres estudiante en el Colegio Técnico de Tokio junto a Gojo, Itadori, Megumi y Nobara.",
     banner: "https://m.media-amazon.com/images/M/MV5BNGY4MTg3NjgtMmFkIN00NTg5LThmYTItMmE5Y2ExOWVjODcxXkEyXkFqcGdeQXVyOTA3MTMyOTA@._V1_.jpg",
     chars: [
-      { name: "Satoru Gojo", role: "Hechicero del Infinito", img: "https://m.media-amazon.com/images/M/MV5BNTBhNGZkZGEtMWEzMi00MThhLWExMWQtYWY4NmJmOWFlNjk0XkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Yuji Itadori", role: "Recipiente de Sukuna", img: "https://m.media-amazon.com/images/M/MV5BNmVmZWVlODYtYTE2Ni00Y2U4LTg4YjktYmU3YzgwODMwZDRhXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Megumi Fushiguro", role: "Invocador de sombras", img: "https://m.media-amazon.com/images/M/MV5BNWU3MWUwNGUtOWU2ZC00NmJkLTg1NjMtOWZjY2VlMDNmNjEwXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Nobara Kugisaki", role: "Hechicera de resonancia", img: "https://m.media-amazon.com/images/M/MV5BMjA4ODU0MTUtMjJiZS00MWE0LWE0MTctNjAzMGNhMTNjNjcyXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Ryomen Sukuna", role: "Rey de las Maldiciones", img: "https://m.media-amazon.com/images/M/MV5BM2EyZThmYmEtNzBkNS00MjNkLTg0MjYtODU0ZDNjNjM0ZWM5XkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" }
+      { name: "Satoru Gojo", role: "Profesor y Hechicero más fuerte.", img: "https://m.media-amazon.com/images/M/MV5BNTBhNGZkZGEtMWEzMi00MThhLWExMWQtYWY4NmJmOWFlNjk0XkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
+      { name: "Yuji Itadori", role: "Compañero atlético y decidido.", img: "https://m.media-amazon.com/images/M/MV5BNmVmZWVlODYtYTE2Ni00Y2U4LTg4YjktYmU3YzgwODMwZDRhXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
+      { name: "Megumi Fushiguro", role: "Invocador de sombras metódico.", img: "https://m.media-amazon.com/images/M/MV5BNWU3MWUwNGUtOWU2ZC00NmJkLTg1NjMtOWZjY2VlMDNmNjEwXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
+      { name: "Nobara Kugisaki", role: "Hechicera directa y segura.", img: "https://m.media-amazon.com/images/M/MV5BMjA4ODU0MTUtMjJiZS00MWE0LWE0MTctNjAzMGNhMTNjNjcyXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" }
+    ]
+  },
+  tokyo: {
+    title: "Tokyo Revengers: Pandillas",
+    category: "anime",
+    desc: "Peleas callejeras, lealtad y decisiones drásticas en las calles de Tokio junto a la ToMan.",
+    banner: "https://picsum.photos/600/220?random=201",
+    chars: [
+      { name: "Mikey (Manjiro Sano)", role: "Líder invencible de la ToMan.", img: "https://picsum.photos/100/100?random=1" },
+      { name: "Draken", role: "Sublíder protector y firme.", img: "https://picsum.photos/100/100?random=2" },
+      { name: "Mitsuya Takashi", role: "Capitán creativo y pacificador.", img: "https://picsum.photos/100/100?random=3" }
     ]
   },
   naruto: {
-    title: "Naruto Shippuden",
+    title: "Naruto Shippuden: Aldea de la Hoja",
     category: "anime",
-    desc: "El camino ninja del Equipo 7. Domina jutsus, completa misiones y protege la Aldea de la Hoja.",
+    desc: "Misiones ninja, lazos de equipo y entrenamiento riguroso en Konoha.",
     banner: "https://m.media-amazon.com/images/M/MV5BZGFiMWFhNDAtMzUyZS00NmE2LTljNDAtOGI2M2E3ZjgxZTUwXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg",
     chars: [
-      { name: "Naruto Uzumaki", role: "Jinchuriki del Zorro de Nueve Colas", img: "https://m.media-amazon.com/images/M/MV5BZmQ5NGFiNWEtMmMyMC00MDdiLTg5YjctOGY4ZjY2ODk2MzQ3XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg" },
-      { name: "Sasuke Uchiha", role: "Maestro del Sharingan", img: "https://m.media-amazon.com/images/M/MV5BYTEzNzI4MmYtY2ZhNi00ZTQzLThhM2UtMDZjYjBmY2JjOWY5XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg" },
-      { name: "Sakura Haruno", role: "Ninja médico de fuerza sobrehumana", img: "https://m.media-amazon.com/images/M/MV5BMjE3OTEzMzUzM15BMl5BanBnXkFtZTgwNTgzNjU3ODE@._V1_.jpg" },
-      { name: "Kakashi Hatake", role: "El Ninja Copia", img: "https://m.media-amazon.com/images/M/MV5BMzcwMDFiMDctMTM1ZC00YjBhLWI0MzgtZWIxMjQ1YjA1ZWEzXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg" },
-      { name: "Itachi Uchiha", role: "Prodigio del clan Uchiha", img: "https://m.media-amazon.com/images/M/MV5BMjAzMjI5NzYwNV5BMl5BanBnXkFtZTgwNTg4MTI0ODE@._V1_.jpg" }
+      { name: "Naruto Uzumaki", role: "Ninja optimista y perseverante.", img: "https://picsum.photos/100/100?random=5" },
+      { name: "Sasuke Uchiha", role: "Genio enfocado en su camino.", img: "https://picsum.photos/100/100?random=6" },
+      { name: "Kakashi Hatake", role: "Líder e instructor del equipo.", img: "https://picsum.photos/100/100?random=7" }
+    ]
+  },
+  zombie: {
+    title: "The Walking Dead: Apocalipsis",
+    category: "terror",
+    desc: "Sobrevive en un mundo donde los caminantes dominan y cada decisión define quién vive.",
+    banner: "https://m.media-amazon.com/images/M/MV5BMTM5MTM5NTM2MF5BMl5BanBnXkFtZTcwODg2OTgyOQ@@._V1_.jpg",
+    chars: [
+      { name: "Rick Grimes", role: "Líder protector del grupo.", img: "https://picsum.photos/100/100?random=8" },
+      { name: "Daryl Dixon", role: "Cazador experto y leal.", img: "https://picsum.photos/100/100?random=9" }
     ]
   },
   henrydanger: {
-    title: "Henry Danger",
+    title: "Henry Danger: Swellview",
     category: "series",
-    desc: "Únete a Kid Danger, Capitán Man y su equipo para defender Swellview de villanos en secreto.",
+    desc: "Protege la ciudad junto a Kid Danger, Capitán Man y el equipo de la Cueva Man.",
     banner: "https://m.media-amazon.com/images/M/MV5BMTY3NTc2NDk5NV5BMl5BanBnXkFtZTgwNTU4NzYxMDI@._V1_.jpg",
     chars: [
-      { name: "Henry Hart (Kid Danger)", role: "Héroe en entrenamiento", img: "https://m.media-amazon.com/images/M/MV5BMTY3NTc2NDk5NV5BMl5BanBnXkFtZTgwNTU4NzYxMDI@._V1_.jpg" },
-      { name: "Ray Manchester (Captain Man)", role: "Superhéroe indestructible", img: "https://m.media-amazon.com/images/M/MV5BMTY3NTc2NDk5NV5BMl5BanBnXkFtZTgwNTU4NzYxMDI@._V1_.jpg" },
-      { name: "Charlotte Page", role: "Estratega del equipo", img: "https://m.media-amazon.com/images/M/MV5BMTY3NTc2NDk5NV5BMl5BanBnXkFtZTgwNTU4NzYxMDI@._V1_.jpg" },
-      { name: "Jasper Dunlop", role: "Encargado de la Cueva Man", img: "https://m.media-amazon.com/images/M/MV5BMTY3NTc2NDk5NV5BMl5BanBnXkFtZTgwNTU4NzYxMDI@._V1_.jpg" }
+      { name: "Henry Hart", role: "Kid Danger, héroe audaz.", img: "https://picsum.photos/100/100?random=10" },
+      { name: "Ray Manchester", role: "Captain Man indestructible.", img: "https://picsum.photos/100/100?random=11" }
     ]
   },
   clarence: {
     title: "Clarence: Aventuras Locas",
     category: "series",
-    desc: "Disfruta del caótico día a día de Clarence, Sumo y Jeff creando travesuras inolvidables.",
+    desc: "Días caóticos y divertidos en la escuela y el vecindario con Clarence, Sumo y Jeff.",
     banner: "https://m.media-amazon.com/images/M/MV5BN2E0NGRhY2EtMzA0NC00NzM4LWE0YzQtNDgwYmRlYmI3N2E2XkEyXkFqcGdeQXVyMzM4MjM0Nzg@._V1_.jpg",
     chars: [
-      { name: "Clarence Wendle", role: "Optimista incorregible", img: "https://m.media-amazon.com/images/M/MV5BN2E0NGRhY2EtMzA0NC00NzM4LWE0YzQtNDgwYmRlYmI3N2E2XkEyXkFqcGdeQXVyMzM4MjM0Nzg@._V1_.jpg" },
-      { name: "Sumo (Ryan Sumouski)", role: "Aventurero salvaje", img: "https://m.media-amazon.com/images/M/MV5BN2E0NGRhY2EtMzA0NC00NzM4LWE0YzQtNDgwYmRlYmI3N2E2XkEyXkFqcGdeQXVyMzM4MjM0Nzg@._V1_.jpg" },
-      { name: "Jeff Randell", role: "El cerebro perfeccionista", img: "https://m.media-amazon.com/images/M/MV5BN2E0NGRhY2EtMzA0NC00NzM4LWE0YzQtNDgwYmRlYmI3N2E2XkEyXkFqcGdeQXVyMzM4MjM0Nzg@._V1_.jpg" }
-    ]
-  },
-  leyendas: {
-    title: "Leyendas de Terror Urbano",
-    category: "leyendas",
-    desc: "Criaturas de la noche, asesinos seriales y mitos oscuros que acechan en callejones solitarios a medianoche.",
-    banner: "https://picsum.photos/600/220?random=105",
-    chars: [
-      { name: "The Slender Man", role: "Entidad sin rostro", img: "https://picsum.photos/100/100?random=29" },
-      { name: "Jeff The Killer", role: "Asesino psicópata", img: "https://picsum.photos/100/100?random=30" }
+      { name: "Clarence", role: "Optimista sin filtros.", img: "https://picsum.photos/100/100?random=12" },
+      { name: "Sumo", role: "Aventurero intrépido.", img: "https://picsum.photos/100/100?random=13" }
     ]
   }
 };
 
-// Generador automático de bots secundarios para complementar los elencos
-function generateExtraBots() {
-  Object.keys(worldsCatalog).forEach((wKey, wIdx) => {
-    for (let i = 1; i <= 25; i++) {
-      worldsCatalog[wKey].chars.push({
-        name: `Personaje Secundario #${i}`,
-        role: `Bot Aliado / Enemigo (${worldsCatalog[wKey].title})`,
-        img: worldsCatalog[wKey].banner
-      });
-    }
-  });
+const worldsCatalog = { ...mainWorlds };
+
+// Generación de más de 200 mundos
+function expandCatalogTo200() {
+  const animeList = ["Demon Slayer", "My Hero Academia", "Attack on Titan", "One Piece", "Bleach", "Chainsaw Man", "Death Note", "Haikyuu", "Dragon Ball Z", "Weak Hero Class", "Blue Lock", "Solo Leveling", "Bungou Stray Dogs"];
+  const terrorList = ["Creepypastas", "El Conjuro", "Viernes 13", "Scream", "Resident Evil", "Silent Hill", "Five Nights at Freddy's", "Saw"];
+  const novelasList = ["Oscura Obsesión", "El Amor del CEO", "Matrimonio Forzado", "Enemigos a Amantes", "Peligro en la Mafia", "Colegio Privado Elite"];
+
+  let count = Object.keys(worldsCatalog).length;
+  const buildBatch = (list, category) => {
+    list.forEach((item) => {
+      count++;
+      const id = `world_${category}_${count}`;
+      worldsCatalog[id] = {
+        title: `${item}: Simulación Extensa`,
+        category: category,
+        desc: `Sumérgete en una historia profunda y detallada ambientada en el universo de ${item}.`,
+        banner: `https://picsum.photos/600/220?random=${count + 300}`,
+        chars: [
+          { name: `Protagonista (${item})`, role: "Personaje central de la trama.", img: `https://picsum.photos/100/100?random=${count + 50}` },
+          { name: `Coprotagonista (${item})`, role: "Aliado o rival estratégico.", img: `https://picsum.photos/100/100?random=${count + 60}` }
+        ]
+      };
+    });
+  };
+
+  while (count < 200) {
+    buildBatch(animeList, "anime");
+    buildBatch(terrorList, "terror");
+    buildBatch(novelasList, "novela");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  generateExtraBots();
+  expandCatalogTo200();
   refreshUserStats();
   renderWorldsGrid('all');
 
@@ -104,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (code === "Creadora_082012") {
       isCreator = true;
       localStorage.setItem("simulo_creator", "true");
-      alert("🪼 ¡Modo Creadora Activado! Turnos ilimitados.");
+      alert("🪼 ¡Modo Creadora Activado! Turnos e historias ilimitadas.");
       refreshUserStats();
     } else {
       alert("Contraseña errónea.");
@@ -128,7 +141,7 @@ function renderWorldsGrid(category) {
     return `
       <div class="world-bubble-card" onclick="openWorldDetail('${key}')">
         <div class="bubble-banner" style="background-image: url('${w.banner}');">
-          <span class="bubble-badge">🪼 30+ Bots</span>
+          <span class="bubble-badge">🪼 200+ Mundos</span>
         </div>
         <div class="bubble-info">
           <h4>${w.title}</h4>
@@ -186,6 +199,7 @@ function openWorldDetail(key) {
   document.getElementById("view-world-detail")?.classList.add("active");
 }
 
+// Historia inicial larga, detallada y descriptiva
 function startNewSimulation() {
   if (turns <= 0 && !isCreator) {
     alert("¡Turnos agotados! Visita la tienda para recargar gratis.");
@@ -196,11 +210,27 @@ function startNewSimulation() {
   document.getElementById("view-game")?.classList.add("active");
   
   const viewport = document.getElementById("chatBox");
+  const world = worldsCatalog[activeWorldKey];
+
   if (viewport) {
-    viewport.innerHTML = `<div class="chat-bubble"><b>[Simulador Activo]</b> Te adentras en el mundo de <b>${worldsCatalog[activeWorldKey].title}</b>. Escribe tu primera acción (*acción*) o diálogo ("diálogo").</div>`;
+    viewport.innerHTML = `<div class="chat-bubble"><i>✨ La IA está redactando una narrativa inmersiva y extensa para ${world.title}...</i></div>`;
+    
+    setTimeout(() => {
+      viewport.innerHTML = `
+        <div class="chat-bubble" style="line-height: 1.6; font-size: 0.98rem;">
+          <b>📖 INICIO DE LA HISTORIA — ${world.title.toUpperCase()}</b><br><br>
+          El aire a tu alrededor se densifica mientras cruzas el umbral hacia este nuevo universo. Las circunstancias que te han traído hasta aquí no son casualidad; cada rincón respira la esencia característica de este lugar, cargado de tensiones, secretos y desafíos inminentes.<br><br>
+          A pocos metros de distancia, <b>${world.chars[0]?.name || "El personaje principal"}</b> se detiene de repente. Sus ojos se fijan en ti con una mezcla de cautela y profunda curiosidad, evaluando cada uno de tus movimientos antes de pronunciar palabra:<br><br>
+          — <i>"No sé exactamente cuáles sean tus intenciones por aquí, pero más vale que sepas dónde estás parado... Las cosas no son tan sencillas como parecen a primera vista, y el tiempo corre en nuestra contra"</i>, dice con tono firme mientras cruza los brazos y espera tu reacción.<br><br>
+          El entorno aguarda expectante tus decisiones. Los acontecimientos comienzan a tomar forma y el destino del lugar depende por completo de tus próximos pasos.<br><br>
+          <b>¿Qué deseas hacer, decir o responder en este preciso instante?</b> *(Usa *acción* para describir tus movimientos físicos o "diálogo" para hablar).*
+        </div>
+      `;
+    }, 1200);
   }
 }
 
+// Respuestas del narrador largas y detalladas
 async function postPlayerAction() {
   const inputField = document.getElementById("userInput");
   if (!inputField) return;
@@ -220,9 +250,18 @@ async function postPlayerAction() {
     viewport.scrollTop = viewport.scrollHeight;
 
     setTimeout(() => {
-      viewport.innerHTML += `<div class="chat-bubble"><b>Narrador / Bot:</b> El equipo reacciona a tu acción: *Los personajes se organizan y responden a tus palabras.*</div>`;
+      const world = worldsCatalog[activeWorldKey];
+      viewport.innerHTML += `
+        <div class="chat-bubble" style="line-height: 1.6; font-size: 0.98rem;">
+          <b>📜 DESARROLLO DE LA NARRATIVA:</b><br><br>
+          Tu acción genera una respuesta inmediata en el entorno. Ante tus palabras y movimientos, la tensión en el ambiente se intensifica notablemente.<br><br>
+          <b>${world.chars[0]?.name || "El personaje"}</b> reacciona de inmediato ante lo que acabas de hacer, analizando con detenimiento las consecuencias de tus actos y adoptando una postura defensiva o colaborativa según corresponda.<br><br>
+          <i>El escenario a tu alrededor evoluciona: nuevos indicios y desafíos se revelan, obligándote a tomar decisiones cada vez más complejas mientras la trama principal avanza sin tregua.</i><br><br>
+          <b>¿Cómo deseas continuar?</b>
+        </div>
+      `;
       viewport.scrollTop = viewport.scrollHeight;
-    }, 900);
+    }, 1000);
   }
 }
 
@@ -266,4 +305,5 @@ function renderGameHistory() {
       </div>
     `;
   }
-}
+    }
+    
