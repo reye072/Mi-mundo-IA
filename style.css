@@ -25,7 +25,6 @@ body {
   padding-bottom: 85px;
 }
 
-/* Header */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -60,7 +59,6 @@ body {
   cursor: pointer;
 }
 
-/* Contenedor */
 .main-container {
   padding: 16px;
   max-width: 550px;
@@ -75,12 +73,11 @@ body {
   display: block;
 }
 
-/* Spotlight Card */
 .spotlight-card {
   background: linear-gradient(135deg, #FFE5EC 0%, #F3E8FF 100%);
   border-radius: 24px;
-  padding: 22px;
-  margin-bottom: 20px;
+  padding: 20px;
+  margin-bottom: 18px;
   box-shadow: var(--sombra-card);
 }
 
@@ -92,27 +89,25 @@ body {
   font-size: 0.75rem;
   font-weight: 700;
   display: inline-block;
-  margin-bottom: 8px;
-}
-
-.spotlight-card h2 {
-  font-size: 1.35rem;
   margin-bottom: 6px;
 }
 
-.spotlight-card p {
-  font-size: 0.9rem;
-  color: var(--texto-muted);
-  margin-bottom: 14px;
+.spotlight-card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
 }
 
-/* Chips Géneros */
+.spotlight-card p {
+  font-size: 0.85rem;
+  color: var(--texto-muted);
+}
+
 .genre-chips {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .chip {
@@ -133,7 +128,6 @@ body {
   border-color: var(--morado-pastel);
 }
 
-/* Secciones y Mundos */
 .section-heading {
   font-size: 1.1rem;
   font-weight: 700;
@@ -186,7 +180,6 @@ body {
   color: var(--texto-muted);
 }
 
-/* Detalle del Mundo */
 .world-hero-box {
   height: 160px;
   border-radius: 20px;
@@ -215,7 +208,6 @@ body {
   margin-bottom: 16px;
 }
 
-/* Personajes */
 .char-scroll-list {
   display: flex;
   flex-direction: column;
@@ -245,29 +237,6 @@ body {
   color: var(--morado-oscuro);
 }
 
-/* Toolbox */
-.toolbox-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.tool-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--bg-card);
-  padding: 12px;
-  border-radius: 16px;
-  border: 1px solid var(--borde-suave);
-}
-
-.tool-emoji {
-  font-size: 1.3rem;
-}
-
-/* Botones Principales */
 .btn-main-action {
   background: var(--rosa-pastel);
   color: var(--texto-main);
@@ -289,7 +258,6 @@ body {
   cursor: pointer;
 }
 
-/* Chat Interactivo */
 .game-header-bar {
   display: flex;
   justify-content: space-between;
@@ -351,7 +319,6 @@ body {
   cursor: pointer;
 }
 
-/* Perfil */
 .profile-main-card {
   background: var(--bg-card);
   padding: 24px;
@@ -408,7 +375,6 @@ body {
   color: var(--texto-muted);
 }
 
-/* Barra de Navegación Inferior */
 .bottom-tabbar {
   position: fixed;
   bottom: 0;
@@ -458,7 +424,6 @@ body {
   box-shadow: 0 6px 20px rgba(255, 194, 209, 0.5);
 }
 
-/* Modal */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -496,4 +461,5 @@ body {
   margin-top: 12px;
   font-weight: 600;
   cursor: pointer;
-}
+  }
+    
