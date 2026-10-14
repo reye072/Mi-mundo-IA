@@ -17,7 +17,6 @@ function startWorld() {
 
   document.getElementById("game-section").style.display = "block";
   
-  // Mensaje inicial para la IA
   const initialInstruction = `Eres el narrador de un mundo interactivo. La temática inicial es: "${promptText}". 
   Comienza la aventura describiendo la escena inicial de forma inmersiva y termina planteando una situación u opción para que el usuario decida qué hacer. Mantén los párrafos breves.`;
 
@@ -36,7 +35,7 @@ async function callGemini(message, isSystemStart = false) {
   }
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: chatHistory })
@@ -55,10 +54,14 @@ async function callGemini(message, isSystemStart = false) {
       chatHistory.push({ role: "model", parts: [{ text: aiReply }] });
       storyBox.scrollTop = storyBox.scrollHeight;
     } else {
-      storyBox.innerHTML += `<br><span style="color:red;">Error: No se pudo generar la respuesta. Revisa tu API Key.</span>`;
+      let errorMsg = "No se pudo conectar con la IA.";
+      if (data.error && data.error.message) {
+        errorMsg = data.error.message;
+      }
+      storyBox.innerHTML += `<br><span style="color:red;">Error: ${errorMsg}</span>`;
     }
   } catch (error) {
-    storyBox.innerHTML += `<br><span style="color:red;">Error de conexión.</span>`;
+    storyBox.innerHTML += `<br><span style="color:red;">Error de red o conexión.</span>`;
   }
 }
 
