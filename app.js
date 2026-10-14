@@ -9,27 +9,70 @@ let activeWorldKey = "zombie";
 const worldsCatalog = {
   zombie: {
     title: "The Walking Dead",
+    category: "terror",
     desc: "La civilización colapsó. Los caminantes dominan las calles y los supervivientes son tu mayor prueba.",
-    banner: "https://picsum.photos/600/220?random=10",
+    banner: "https://picsum.photos/600/220?random=1",
     chars: [
-      { name: "Rick Grimes", role: "Líder táctico" },
+      { name: "Rick Grimes", role: "Líder táctico y pistolero" },
       { name: "Daryl Dixon", role: "Rastreador experto" },
-      { name: "Michonne", role: "Guerrera defensiva" }
+      { name: "Negan Smith", role: "Líder de los Salvadores" }
     ]
   },
   lastofus: {
     title: "The Last of Us",
-    desc: "El hongo Cordyceps diezmó a la humanidad. Sobrevive en la zona de cuarentena y más allá.",
-    banner: "https://picsum.photos/600/220?random=20",
+    category: "terror",
+    desc: "El hongo Cordyceps diezmó a la humanidad. Sobrevive en zonas infestadas de infectados violentos.",
+    banner: "https://picsum.photos/600/220?random=2",
     chars: [
-      { name: "Joel Miller", role: "Contrabandista" },
+      { name: "Joel Miller", role: "Contrabandista veterano" },
       { name: "Ellie Williams", role: "Inmune y audaz" }
+    ]
+  },
+  jujutsu: {
+    title: "Jujutsu Kaisen: Canon Oscuro",
+    category: "anime",
+    desc: "Maldiciones desatadas por el mundo. Entra a la Academia de Hechicería y combate seres sobrenaturales sin censura.",
+    banner: "https://picsum.photos/600/220?random=3",
+    chars: [
+      { name: "Satoru Gojo", role: "Hechicero más fuerte" },
+      { name: "Sukuna", role: "Rey de las Maldiciones" }
+    ]
+  },
+  tokyo: {
+    title: "Tokyo Revengers: Pandillas",
+    category: "anime",
+    desc: "Viajes en el tiempo, peleas callejeras sangrientas, lealtades oscuras y decisiones límite.",
+    banner: "https://picsum.photos/600/220?random=4",
+    chars: [
+      { name: "Mikey (Manjiro Sano)", role: "Invencible líder de Toman" },
+      { name: "Draken (Ken Ryuguji)", role: "Segundo al mando" }
+    ]
+  },
+  leyendas: {
+    title: "Leyendas de Terror Urbano",
+    category: "leyendas",
+    desc: "Criaturas de la noche, asesinos seriales y mitos oscuros que acechan en callejones a medianoche.",
+    banner: "https://picsum.photos/600/220?random=5",
+    chars: [
+      { name: "The Slender Man", role: "Entidad sin rostro" },
+      { name: "Jeff The Killer", role: "Asesino psicópata" }
+    ]
+  },
+  romance: {
+    title: "Novela: Oscura Obsesión",
+    category: "novela",
+    desc: "Una historia de romance oscuro, peligros compartidos, tensión al límite y tramas apasionantes.",
+    banner: "https://picsum.photos/600/220?random=6",
+    chars: [
+      { name: "Christian Grey", role: "Empresario enigmático" },
+      { name: "Aiden (Mafioso)", role: "Protector peligroso" }
     ]
   }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
   refreshUserStats();
+  renderWorldsGrid('all');
 
   document.getElementById("creadoraBtn").addEventListener("click", () => {
     const code = prompt("Introduce tu clave de Creadora:");
@@ -45,6 +88,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("sendBtn").addEventListener("click", postPlayerAction);
 });
+
+function renderWorldsGrid(category) {
+  const grid = document.getElementById("worldsGridContainer");
+  const filteredKeys = Object.keys(worldsCatalog).filter(k => {
+    if (category === 'all') return true;
+    return worldsCatalog[k].category === category;
+  });
+
+  grid.innerHTML = filteredKeys.map(key => {
+    const w = worldsCatalog[key];
+    return `
+      <div class="world-bubble-card" onclick="openWorldDetail('${key}')">
+        <div class="bubble-banner" style="background-image: url('${w.banner}');">
+          <span class="bubble-badge">🔥 45K</span>
+        </div>
+        <div class="bubble-info">
+          <h4>${w.title}</h4>
+          <p>${w.desc.substring(0, 42)}...</p>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function filterWorlds(category) {
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  event.target.classList.add("active");
+  renderWorldsGrid(category);
+}
 
 function switchTab(targetId) {
   document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
@@ -90,7 +162,7 @@ function startNewSimulation() {
   document.getElementById("view-game").classList.add("active");
   
   const viewport = document.getElementById("chatBox");
-  viewport.innerHTML = `<div class="chat-bubble"><b>[Simulador Activo]</b> Te adentras en ${worldsCatalog[activeWorldKey].title}. Describe tu primera acción u objeto.</div>`;
+  viewport.innerHTML = `<div class="chat-bubble"><b>[Simulador Activo]</b> Te adentras en ${worldsCatalog[activeWorldKey].title}. Describe tu primera acción (*acción*) o diálogo (&quot;diálogo&quot;).</div>`;
 }
 
 async function postPlayerAction() {
@@ -109,9 +181,9 @@ async function postPlayerAction() {
   inputField.value = "";
   viewport.scrollTop = viewport.scrollHeight;
 
-  // Respuesta simulada con estilo dinámico
+  // Respuesta simulada de la IA
   setTimeout(() => {
-    viewport.innerHTML += `<div class="chat-bubble"><b>Narrador:</b> El entorno reacciona a tu movimiento: *Un silencio tenso se apodera del lugar mientras evalúas tus opciones de supervivencia.*</div>`;
+    viewport.innerHTML += `<div class="chat-bubble"><b>Narrador / Bot:</b> El entorno reacciona intensamente a tu movimiento: *La tensión aumenta en el escenario mientras las consecuencias de tus actos comienzan a manifestarse.*</div>`;
     viewport.scrollTop = viewport.scrollHeight;
   }, 900);
 }
@@ -141,11 +213,11 @@ function watchAdReward() {
 function renderGameHistory() {
   const historyBox = document.getElementById("historyList");
   historyBox.innerHTML = `
-    <div class="tool-card" onclick="startNewSimulation()" style="cursor:pointer;">
-      <span class="tool-emoji">🧟</span>
+    <div class="char-item-card" onclick="startNewSimulation()" style="cursor:pointer;">
+      <div class="char-avatar-box">🎮</div>
       <div>
         <h5>${worldsCatalog[activeWorldKey].title}</h5>
-        <p>Partida guardada • Turnos: ${isCreator ? "Ilimitados" : turns}</p>
+        <p style="font-size:0.75rem; color:var(--texto-muted);">Partida guardada • Turnos: ${isCreator ? "Ilimitados" : turns}</p>
       </div>
     </div>
   `;
