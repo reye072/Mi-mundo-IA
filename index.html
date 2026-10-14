@@ -3,40 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mundos IA - Simulador</title>
+  <title>SimulO - Tu sandbox de aventuras interactivas con IA</title>
+  <meta name="description" content="SimulO simula mundos vivos impulsados por Inteligencia Artificial: chatea con personajes, vive aventuras y descubre historias infinitas gratis.">
+  <meta property="og:title" content="SimulO - Aventuras Interactivas">
+  <meta property="og:description" content="Crea y juega en mundos vivos impulsados por Inteligencia Artificial. ¡Entra y juega gratis!">
+  <meta property="og:type" content="website">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <h1>🌍 Mundos IA</h1>
-    <p>Elige o crea un mundo interactivo</p>
+  <!-- Navegación Superior -->
+  <header class="navbar">
+    <div class="logo">Simul<span>O</span></div>
+    <div class="nav-controls">
+      <button id="creator-btn" class="btn-creator" onclick="toggleCreatorMode()">👑 Modo Creadora: OFF</button>
+      <div class="energy-badge">
+        ⚡ <span id="energy-count">50</span> Turnos
+      </div>
+    </div>
   </header>
 
-  <main>
-    <!-- Configuración del Mundo -->
-    <section class="card">
-      <h2>1. Configura tu Mundo</h2>
-      <label for="world-prompt">Describe la temática o historia de tu mundo:</label>
-      <textarea id="world-prompt" rows="3" placeholder="Ej: Eres un superviviente en una nave espacial a la deriva..."></textarea>
-      
-      <label for="api-key">Tu API Key de Gemini:</label>
-      <input type="password" id="api-key" placeholder="Pega aquí tu clave API">
-      <button onclick="startWorld()">🚀 Comenzar Mundo</button>
-    </section>
-
-    <!-- Chat / Interacción de la historia -->
-    <section class="card" id="game-section" style="display:none;">
-      <h2>2. Aventura Interactiva</h2>
-      <div id="story-box"></div>
-      
-      <div class="input-group">
-        <input type="text" id="user-input" placeholder="¿Qué quieres hacer o decir?">
-        <button onclick="sendAction()">Enviar</button>
+  <main class="container">
+    
+    <!-- Banner Principal -->
+    <section class="hero-card">
+      <div class="hero-overlay">
+        <span class="badge">DESTACADO</span>
+        <h2>Simulador de Supervivencia Z</h2>
+        <p>Lidera un grupo en un mundo devastado por caminantes y escenarios hostiles.</p>
+        <button class="btn-primary" onclick="selectPreset('The Walking Dead')">Jugar Ahora</button>
       </div>
     </section>
+
+    <!-- Filtros/Categorías -->
+    <div class="tags-bar">
+      <span class="tag active">Para ti</span>
+      <span class="tag">Supervivencia</span>
+      <span class="tag">Terror</span>
+      <span class="tag">Fantasía</span>
+    </div>
+
+    <!-- Galería de Mundos -->
+    <h3 class="section-title">Elegido para ti</h3>
+    <section class="grid-mundos">
+      
+      <div class="card" onclick="selectPreset('The Walking Dead')">
+        <div class="card-image bg-zombie">🧟‍♂️</div>
+        <div class="card-content">
+          <h4>The Walking Dead</h4>
+          <p>Sobrevive. Confía en pocos. Teme a todos.</p>
+        </div>
+      </div>
+
+      <div class="card" onclick="selectPreset('Tokyo Revengers')">
+        <div class="card-image bg-tokyo">👊</div>
+        <div class="card-content">
+          <h4>Tokyo Revengers</h4>
+          <p>Pandillas, viajes en el tiempo y peleas.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Creador de Personaje, Lore y Tienda Falsa (Estilo App Avanzada) -->
+    <section class="custom-world-box">
+      <h3>Crea tu personaje y tu mundo</h3>
+      <p class="subtitle-box">Personaliza tu historia. Si dejas algo en blanco, la IA lo creará detalladamente.</p>
+      
+      <label class="memory-label">¿Cómo te llamas?</label>
+      <input type="text" id="char-name" placeholder="Ej: Deny">
+
+      <label class="memory-label">Describe tu personaje (Apariencia, personalidad...):</label>
+      <textarea id="char-desc" placeholder="Ej: Valiente, astuta..."></textarea>
+
+      <label class="memory-label">Ropa o vestimenta (Opcional):</label>
+      <input type="text" id="char-clothes" placeholder="Ej: Chaqueta de cuero negra y botas gastadas">
+      
+      <label class="memory-label">¿Cuál era tu profesión antes del apocalipsis?</label>
+      <input type="text" id="char-job" placeholder="Ej: Estudiante">
+
+      <label class="memory-label">¿Con qué arma comienzas?</label>
+      <input type="text" id="char-weapon" placeholder="Ej: Un bate con alambre de púas">
+
+      <label class="memory-label">¿Dónde comienza tu historia?</label>
+      <input type="text" id="char-location" placeholder="Ej: En una tienda abandonada">
+
+      <label class="memory-label">Nombre del mundo o temática (Ej: The Walking Dead, Harry Potter...):</label>
+      <input type="text" id="world-prompt" placeholder="Ej: The Walking Dead">
+
+      <label class="memory-label">🧠 Características de personajes de la historia o lore extra (Opcional):</label>
+      <textarea id="lore-details" placeholder="Ej: Rick Grimes es el líder prudente, Daryl es un arquero solitario y los caminantes atraen ruido..."></textarea>
+
+      <button class="btn-primary full-width" onclick="startWorld()">🚀 Entrar al mundo</button>
+    </section>
+
+    <!-- Apps y Tienda Falsa (Visible durante el juego) -->
+    <section id="apps-section" class="apps-container" style="display: none;">
+      <h4>📦 Apps y Tienda de Supervivencia</h4>
+      <div class="apps-grid">
+        <button class="btn-app" onclick="openStore()">🛒 Tienda Falsa</button>
+        <button class="btn-app" onclick="openInventory()">🎒 Inventario</button>
+      </div>
+    </section>
+
+    <!-- Modal de Tienda Falsa -->
+    <div id="store-modal" class="custom-world-box" style="display: none; border-color: #eab308; margin-top: 15px;">
+      <h3 style="color: #facc15;">🛒 Tienda de Suministros (Falsa)</h3>
+      <p class="subtitle-box">Compra objetos para tu aventura usando tus puntos o recursos ficticios:</p>
+      <ul style="list-style: none; padding: 0; font-size: 0.9rem; line-height: 1.8;">
+        <li>🥫 Lata de comida en conserva — <button class="btn-primary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="buyItem('Lata de comida')">Comprar</button></li>
+        <li>🩹 Botiquín médico de emergencia — <button class="btn-primary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="buyItem('Botiquín médico')">Comprar</button></li>
+        <li>🔪 Cuchillo de combate — <button class="btn-primary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="buyItem('Cuchillo de combate')">Comprar</button></li>
+      </ul>
+      <button class="btn-primary full-width" style="background: #475569; margin-top: 10px;" onclick="closeStore()">Cerrar Tienda</button>
+    </div>
+
+    <!-- Modal de Recarga por Anuncio -->
+    <section id="ad-modal" class="ad-modal" style="display: none;">
+      <div class="ad-content">
+        <h3>⚡ ¡Te has quedado sin turnos!</h3>
+        <p>Mira un anuncio corto para recargar 10 turnos más y continuar tu historia.</p>
+        <button class="btn-reward" onclick="watchAdToReward()">🎬 Ver Anuncio (+10 Turnos)</button>
+      </div>
+    </section>
+
+    <!-- Pantalla de Juego -->
+    <section id="game-section" class="game-container" style="display: none;">
+      <div class="game-header">
+        <h3 id="game-title">Aventura en Curso</h3>
+      </div>
+      <div id="story-box" class="story-box"></div>
+      
+      <div class="game-input-bar">
+        <textarea id="user-input" placeholder='Usa "para hablar" y *para acciones*...'></textarea>
+        <button onclick="sendAction()" class="btn-send">Enviar</button>
+      </div>
+    </section>
+
   </main>
 
   <script src="app.js"></script>
 </body>
 </html>
+
