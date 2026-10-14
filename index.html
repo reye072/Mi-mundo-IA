@@ -12,7 +12,7 @@
   <!-- Cabecera Superior -->
   <header class="app-header">
     <div class="logo-box">
-      <span class="logo-icon">🌸</span>
+      <span class="logo-icon">🪼</span>
       <h1>SimulO</h1>
     </div>
     <div class="header-tools">
@@ -23,12 +23,12 @@
   <!-- Contenido Principal -->
   <main class="main-container">
 
-    <!-- VISTA EXPLORAR (Inicio directo con todo el catálogo) -->
+    <!-- VISTA EXPLORAR -->
     <section id="view-explore" class="app-view active">
       <div class="spotlight-card">
-        <span class="spotlight-tag">🌟 EXPLORA EL UNIVERSO</span>
-        <h2>Simulaciones sin Censura</h2>
-        <p>Elige tu historia de terror, anime, leyendas o novelas y toma el control.</p>
+        <span class="spotlight-tag">🌟 UNIVERSO SIMULO</span>
+        <h2>Más de 200 Mundos y Narrativas Extensas</h2>
+        <p>Explora novelas, anime, terror y leyendas con historias detalladas y sin censura.</p>
       </div>
 
       <div class="genre-chips">
@@ -39,15 +39,15 @@
         <button class="chip" onclick="filterWorlds('novela')">Novelas</button>
       </div>
 
-      <h3 class="section-heading">Mundos Disponibles para Elegir</h3>
+      <h3 class="section-heading">Catálogo de Mundos</h3>
       <div class="worlds-custom-grid" id="worldsGridContainer">
-        <!-- Se llena automáticamente al entrar -->
+        <!-- Se llena dinámicamente -->
       </div>
     </section>
 
     <!-- VISTA DETALLE DEL MUNDO -->
     <section id="view-world-detail" class="app-view">
-      <button class="btn-return" onclick="switchTab('explore')">← Volver a elegir mundo</button>
+      <button class="btn-return" onclick="switchTab('explore')">← Volver a los mundos</button>
       <div class="world-hero-box" id="detailBanner"></div>
       <div class="world-info-content">
         <h2 id="detailTitle">Título del Mundo</h2>
@@ -56,7 +56,7 @@
         <button class="btn-main-action" onclick="startNewSimulation()">▶ Iniciar Partida (50 Turnos)</button>
       </div>
 
-      <h3 class="section-heading">Personajes y Bots en este Mundo</h3>
+      <h3 class="section-heading">Elenco de Bots y Personajes</h3>
       <div class="char-scroll-list" id="charactersList"></div>
     </section>
 
@@ -69,7 +69,7 @@
     <!-- VISTA PERFIL -->
     <section id="view-profile" class="app-view">
       <div class="profile-main-card">
-        <div class="profile-avatar-circle">🧸</div>
+        <div class="profile-avatar-circle">🪼</div>
         <h3>Jugadora SimulO</h3>
         <span class="profile-status" id="creatorStatusBadge">Cuenta Gratuita</span>
         <div class="profile-stats-grid">
@@ -82,7 +82,13 @@
             <span class="stat-text">Partidas</span>
           </div>
         </div>
-        <button class="btn-main-action" onclick="openShopModal()">🌸 Recargar Turnos (+15)</button>
+        
+        <!-- Opción secreta camuflada como un punto grande -->
+        <div style="margin: 15px 0; text-align: center;">
+          <span id="secretDotBtn" onclick="toggleAdultMode()" style="font-size: 2rem; cursor: pointer; color: var(--texto-muted); user-select: none;" title="">•</span>
+        </div>
+
+        <button class="btn-main-action" onclick="openShopModal()">🪼 Recargar Turnos (+15)</button>
       </div>
     </section>
 
@@ -104,7 +110,7 @@
   <!-- Modal Tienda / Zaps -->
   <div class="modal-overlay" id="shopModal">
     <div class="modal-box">
-      <h3>Recarga de Turnos</h3>
+      <h3>Recarga de Turnos con Medusa Zaps</h3>
       <p>Mira un anuncio simulado para reclamar +15 turnos acumulables.</p>
       <button class="btn-main-action" onclick="watchAdReward()">📺 Ver Anuncio (+15 Turnos)</button>
       <button class="btn-cancel-modal" onclick="closeShopModal()">Cerrar</button>
@@ -122,7 +128,7 @@
       <span>Historial</span>
     </button>
     <button class="tab-btn center-plus-btn" onclick="switchTab('explore')">
-      <span>+</span>
+      <span>🪼</span>
     </button>
     <button class="tab-btn" onclick="switchTab('profile')">
       <span class="tab-icon">👤</span>
