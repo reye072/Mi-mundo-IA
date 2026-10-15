@@ -59,6 +59,24 @@
       <div class="worlds-custom-grid" id="worldsGridContainer"></div>
     </section>
 
+    <!-- VISTA DETALLE DEL MUNDO Y CHAT -->
+    <section id="view-game" class="app-view">
+      <div class="game-header-bar" style="margin-bottom: 12px;">
+        <button class="creator-badge-btn" onclick="switchTab('explore')">← Volver al Catálogo</button>
+      </div>
+      <div class="profile-main-card" style="text-align: left; margin-bottom: 14px;">
+        <h3 id="activeWorldTitle" style="color: var(--morado-oscuro); margin-bottom: 6px;">Mundo</h3>
+        <p id="activeWorldDesc" style="font-size: 0.82rem; color: var(--texto-muted); margin-bottom: 12px;"></p>
+        <button class="btn-main-action" onclick="startChatSimulation()">▶ Iniciar Partida de Rol (-1 Turno)</button>
+      </div>
+      
+      <div class="chat-viewport" id="chatBox" style="background: white; border-radius: var(--border-radius); height: 250px; padding: 12px; overflow-y: auto; border: 1px solid #F3E8FF; margin-bottom: 10px; display: none;"></div>
+      <div class="chat-composer" id="chatComposerBox" style="display: none; gap: 8px;">
+        <input type="text" id="userInput" placeholder="Usa *acción* o &quot;diálogo&quot;..." class="modal-input-field" style="margin:0;">
+        <button id="sendBtn" class="creator-badge-btn" onclick="sendMessage()" style="padding: 0 16px; background: var(--morado-principal); color: white;">Enviar</button>
+      </div>
+    </section>
+
     <!-- VISTA HISTORIAL -->
     <section id="view-history" class="app-view">
       <h2 class="section-heading">Historial de Partidas</h2>
@@ -78,7 +96,7 @@
           <div class="stat-item"><span class="stat-number" id="gamesCount">0</span><span class="stat-text">Partidas</span></div>
         </div>
 
-        <button class="creator-badge-btn" onclick="openEditProfileModal()" style="width: 100%; margin-bottom: 10px;">✏️ Editar mi Perfil</button>
+        <button class="creator-badge-btn" onclick="openEditProfileModal()" style="width: 100%; margin-bottom: 10px;">✏️ Editar mi Perfil y Foto</button>
         <button class="creator-badge-btn" onclick="openVerifyLinkModal()" style="width: 100%; margin-bottom: 10px; background: #E0E7FF; color: #3730A3;">📱 Canjear Puntos por Video Tik Tok / Redes (+50)</button>
       </div>
     </section>
@@ -89,23 +107,30 @@
   <div class="modal-overlay" id="tutorialModal" style="display: none;">
     <div class="modal-box" style="text-align: left;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">❓ Ayuda y Guía</h3>
-      <p style="font-size: 0.82rem; color: var(--texto-muted); margin-bottom: 14px;">Explora los mundos, gasta turnos chateando con personajes y canjea puntos por videos.</p>
+      <p style="font-size: 0.82rem; color: var(--texto-muted); margin-bottom: 14px;">Explora los mundos, gasta turnos chateando con personajes y crea tus propias historias.</p>
       <button class="btn-main-action" onclick="closeTutorialModal()">Entendido</button>
     </div>
   </div>
 
-  <!-- MODAL DE EDITAR PERFIL -->
+  <!-- MODAL DE EDITAR PERFIL Y FOTO -->
   <div class="modal-overlay" id="editProfileModal" style="display: none;">
     <div class="modal-box" style="text-align: left;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">✏️ Editar Perfil</h3>
+      <label style="font-size: 0.75rem; color: var(--texto-muted);">Tu Nombre:</label>
       <input type="text" id="editNameInput" class="modal-input-field" placeholder="Tu nombre">
-      <input type="text" id="editDescInput" class="modal-input-field" placeholder="Tu descripción">
-      <button class="btn-main-action" onclick="saveProfileChanges()" style="margin-bottom: 8px;">Guardar</button>
-      <button class="btn-cancel-modal" onclick="closeEditProfileModal()" style="width: 100%; background: none; border: none; color: var(--texto-muted); cursor: pointer;">Cancelar</button>
+      
+      <label style="font-size: 0.75rem; color: var(--texto-muted);">URL de tu Foto de Perfil:</label>
+      <input type="text" id="editAvatarInput" class="modal-input-field" placeholder="https://imagen.com/foto.jpg">
+      
+      <label style="font-size: 0.75rem; color: var(--texto-muted);">Descripción:</label>
+      <input type="text" id="editDescInput" class="modal-input-field" placeholder="Tu biografía">
+      
+      <button class="btn-main-action" onclick="saveProfileChanges()" style="margin-bottom: 8px;">Guardar Cambios</button>
+      <button onclick="closeEditProfileModal()" style="width: 100%; background: none; border: none; color: var(--texto-muted); cursor: pointer; padding: 6px;">Cancelar</button>
     </div>
   </div>
 
-  <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+  <!-- BARRA DE NAVEGACIÓN INFERIOR (CON MEDUSA PARA CREAR MUNDOS) -->
   <nav class="bottom-tabbar">
     <button class="tab-btn active" onclick="switchTab('explore')">
       <span class="tab-icon">🏠</span>
@@ -115,7 +140,7 @@
       <span class="tab-icon">📖</span>
       <span>Historial</span>
     </button>
-    <button class="tab-btn center-plus-btn" onclick="switchTab('explore')">
+    <button class="tab-btn center-plus-btn" onclick="promptCreateWorld()" title="Crear Mundo">
       <span>🪼</span>
     </button>
     <button class="tab-btn" onclick="switchTab('profile')">
@@ -126,4 +151,5 @@
 
   <script src="app.js"></script>
 </body>
-</html>
+        </html>
+        
