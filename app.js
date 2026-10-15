@@ -461,5 +461,5 @@ function toggleAdultMode() {
     alert("☀️ [Modo Estándar activado].");
     document.getElementById("secretDotBtn").style.color = "var(--texto-muted)";
   }
-               }
-    
+    }
+                          
