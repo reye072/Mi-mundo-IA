@@ -10,8 +10,8 @@
 <body>
 
   <!-- REGALO DE BIENVENIDA MÁGICO 🎁 -->
-  <div class="modal-overlay" id="giftModal" style="display: flex;" onclick="openGiftAndEnter()">
-    <div class="modal-box gift-paper-box" style="text-align: center; padding: 32px;" onclick="event.stopPropagation(); openGiftAndEnter();">
+  <div class="modal-overlay" id="giftModal" style="display: flex;">
+    <div class="modal-box gift-paper-box" style="text-align: center; padding: 32px;">
       <span class="gift-icon-anim" style="font-size: 4rem; display: block; margin-bottom: 12px;">🎁</span>
       <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">¡Tienes un regalo especial!</h3>
       <p style="font-size: 0.88rem; color: var(--texto-muted); margin-bottom: 22px;">Toca el regalo para abrir la carta mágica y entrar a SimulO.</p>
@@ -42,7 +42,7 @@
         <p>Anime, terror, series y novelas con narrativas profundas y sin censura.</p>
       </div>
 
-      <!-- BARRA DE BÚSQUEDA POR NOMBRE -->
+      <!-- BARRA DE BÚSQUEDA -->
       <div style="margin-bottom: 14px;">
         <input type="text" id="worldSearchInput" placeholder="🔍 Buscar anime, novela o serie..." class="modal-input-field" style="margin:0; background: white; border: 1px solid #F3E8FF; border-radius: 20px; padding: 12px 18px;" oninput="searchWorlds()">
       </div>
@@ -84,6 +84,26 @@
     </section>
 
   </main>
+
+  <!-- MODAL DE AYUDA -->
+  <div class="modal-overlay" id="tutorialModal" style="display: none;">
+    <div class="modal-box" style="text-align: left;">
+      <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">❓ Ayuda y Guía</h3>
+      <p style="font-size: 0.82rem; color: var(--texto-muted); margin-bottom: 14px;">Explora los mundos, gasta turnos chateando con personajes y canjea puntos por videos.</p>
+      <button class="btn-main-action" onclick="closeTutorialModal()">Entendido</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE EDITAR PERFIL -->
+  <div class="modal-overlay" id="editProfileModal" style="display: none;">
+    <div class="modal-box" style="text-align: left;">
+      <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">✏️ Editar Perfil</h3>
+      <input type="text" id="editNameInput" class="modal-input-field" placeholder="Tu nombre">
+      <input type="text" id="editDescInput" class="modal-input-field" placeholder="Tu descripción">
+      <button class="btn-main-action" onclick="saveProfileChanges()" style="margin-bottom: 8px;">Guardar</button>
+      <button class="btn-cancel-modal" onclick="closeEditProfileModal()" style="width: 100%; background: none; border: none; color: var(--texto-muted); cursor: pointer;">Cancelar</button>
+    </div>
+  </div>
 
   <!-- BARRA DE NAVEGACIÓN INFERIOR -->
   <nav class="bottom-tabbar">
