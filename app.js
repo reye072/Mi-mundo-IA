@@ -1,6 +1,3 @@
-// ==========================================
-// ESTADO GLOBAL Y DATOS DE LA PLATAFORMA
-// ==========================================
 let userData = {
   name: "Jugadora SimulO",
   desc: "Exploradora de universos y creadora de historias.",
@@ -14,7 +11,6 @@ let userData = {
   adultMode: false
 };
 
-// Base de datos masiva con mundos de franquicias oficiales
 const worldsDatabase = [
   {
     id: "mha",
@@ -76,9 +72,6 @@ let communityIdeas = [
   { text: "Más avatares oficiales de anime y manhwas", votes: 31 }
 ];
 
-// ==========================================
-// INICIALIZACIÓN
-// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   renderWorlds(worldsDatabase);
   updateUI();
@@ -97,9 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ==========================================
-// CONTROL DE UI Y VISTAS
-// ==========================================
 function switchTab(tabId) {
   document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
   
@@ -132,43 +122,18 @@ function updateUI() {
   }
 }
 
-// ==========================================
-// EFECTO MÁGICO DE APERTURA DE PAPEL (REGALO)
-// ==========================================
-function openGiftAndEnter() {
-  // REGALO MÁGICO DE BIENVENIDA (FORZADO Y SEGURO)
+// APERTURA INMEDIATA Y SEGURA DEL REGALO
 function openGiftAndEnter() {
   const modal = document.getElementById("giftModal");
   if (modal) {
-    modal.style.display = "none"; // Oculta el cuadro de inmediato
+    modal.style.display = "none";
   }
   
   userData.turns += 25;
   updateUI();
   switchTab('explore');
-  
-  alert("🎁 ¡La carta mágica se ha abierto! Has recibido +25 turnos extra en SimulO.");
-}
-  
-
-  setTimeout(() => {
-    modal.style.display = "none";
-    modalBox.classList.remove("paper-opening-anim");
-    modal.style.background = "rgba(80, 20, 110, 0.85)";
-  }, 600);
-
-  userData.turns += 25;
-  updateUI();
-  switchTab('explore');
-  
-  setTimeout(() => {
-    alert("🎁 ¡La carta mágica se ha abierto! Has recibido +25 turnos extra en SimulO.");
-  }, 700);
 }
 
-// ==========================================
-// MUNDOS Y FILTROS
-// ==========================================
 function renderWorlds(list) {
   const container = document.getElementById("worldsGridContainer");
   if (!container) return;
@@ -208,9 +173,6 @@ function searchWorlds() {
   renderWorlds(filtered);
 }
 
-// ==========================================
-// DETALLE DE MUNDO Y PARTIDAS
-// ==========================================
 function openWorldDetail(worldId) {
   activeWorld = worldsDatabase.find(w => w.id === worldId);
   if (!activeWorld) return;
@@ -262,9 +224,6 @@ function renderWorldPartidas() {
   });
 }
 
-// ==========================================
-// CONFIGURACIÓN Y INICIO DE PARTIDA
-// ==========================================
 function openSetupModal() { document.getElementById("setupModal").style.display = "flex"; }
 function closeSetupModal() { document.getElementById("setupModal").style.display = "none"; }
 
@@ -324,9 +283,6 @@ function resumeGame(index) {
   switchTab('game');
 }
 
-// ==========================================
-// CHAT E INTERACCIÓN CON IA
-// ==========================================
 function sendMessage() {
   const input = document.getElementById("userInput");
   const text = input.value.trim();
@@ -378,9 +334,6 @@ function generateAIReply(userText) {
   }
 }
 
-// ==========================================
-// MODALES Y HERRAMIENTAS INMERSIVAS
-// ==========================================
 function openTutorialModal() { document.getElementById("tutorialModal").style.display = "flex"; }
 function closeTutorialModal() { document.getElementById("tutorialModal").style.display = "none"; }
 
@@ -440,9 +393,6 @@ function saveProfileChanges() {
   alert("✨ Perfil actualizado correctamente.");
 }
 
-// ==========================================
-// VERIFICACIÓN DE VIDEOS Y PAGOS
-// ==========================================
 function submitVideoLink() {
   const link = document.getElementById("videoLinkInput").value.trim();
   if (!link) {
@@ -511,5 +461,5 @@ function toggleAdultMode() {
     alert("☀️ [Modo Estándar activado].");
     document.getElementById("secretDotBtn").style.color = "var(--texto-muted)";
   }
-}
-  
+               }
+    
