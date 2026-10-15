@@ -136,12 +136,20 @@ function updateUI() {
 // EFECTO MÁGICO DE APERTURA DE PAPEL (REGALO)
 // ==========================================
 function openGiftAndEnter() {
+  // REGALO MÁGICO DE BIENVENIDA (FORZADO Y SEGURO)
+function openGiftAndEnter() {
   const modal = document.getElementById("giftModal");
-  const modalBox = modal.querySelector(".modal-box");
+  if (modal) {
+    modal.style.display = "none"; // Oculta el cuadro de inmediato
+  }
   
-  // Activa la animación de la carta desplegándose
-  modalBox.classList.add("paper-opening-anim");
-  modal.style.background = "rgba(107, 33, 168, 0)";
+  userData.turns += 25;
+  updateUI();
+  switchTab('explore');
+  
+  alert("🎁 ¡La carta mágica se ha abierto! Has recibido +25 turnos extra en SimulO.");
+}
+  
 
   setTimeout(() => {
     modal.style.display = "none";
