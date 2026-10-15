@@ -6,71 +6,37 @@ let turns = parseInt(localStorage.getItem("simulo_turns")) || 50;
 let isCreator = localStorage.getItem("simulo_creator") === "true";
 let isAdultMode = localStorage.getItem("simulo_adult") === "true";
 let activeWorldKey = "jujutsu";
+let messageHistory = [];
+let userPartidas = JSON.parse(localStorage.getItem("simulo_partidas")) || [];
+
+let userProfile = JSON.parse(localStorage.getItem("simulo_user_profile")) || {
+  name: "Jugadora SimulO",
+  avatar: "https://picsum.photos/100/100?random=99",
+  desc: "Apasionada por los mundos de rol y simulación."
+};
 
 const mainWorlds = {
   jujutsu: {
-    title: "Jujutsu Kaisen: Colegio Técnico",
+    title: "Jujutsu Kaisen",
     category: "anime",
-    desc: "Maldiciones y hechicería. Eres estudiante en el Colegio Técnico de Tokio junto a Gojo, Itadori, Megumi y Nobara.",
+    desc: "Maldiciones y hechicería. Estás en el Colegio Técnico de Tokio junto a Satoru Gojo, Megumi, Itadori y Nobara.",
     banner: "https://m.media-amazon.com/images/M/MV5BNGY4MTg3NjgtMmFkIN00NTg5LThmYTItMmE5Y2ExOWVjODcxXkEyXkFqcGdeQXVyOTA3MTMyOTA@._V1_.jpg",
     chars: [
-      { name: "Satoru Gojo", role: "Profesor y Hechicero más fuerte.", img: "https://m.media-amazon.com/images/M/MV5BNTBhNGZkZGEtMWEzMi00MThhLWExMWQtYWY4NmJmOWFlNjk0XkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Yuji Itadori", role: "Compañero atlético y decidido.", img: "https://m.media-amazon.com/images/M/MV5BNmVmZWVlODYtYTE2Ni00Y2U4LTg4YjktYmU3YzgwODMwZDRhXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Megumi Fushiguro", role: "Invocador de sombras metódico.", img: "https://m.media-amazon.com/images/M/MV5BNWU3MWUwNGUtOWU2ZC00NmJkLTg1NjMtOWZjY2VlMDNmNjEwXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Nobara Kugisaki", role: "Hechicera directa y segura.", img: "https://m.media-amazon.com/images/M/MV5BMjA4ODU0MTUtMjJiZS00MWE0LWE0MTctNjAzMGNhMTNjNjcyXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" }
-    ]
-  },
-  tokyo: {
-    title: "Tokyo Revengers: Pandillas",
-    category: "anime",
-    desc: "Peleas callejeras, lealtad y decisiones drásticas en las calles de Tokio junto a la ToMan.",
-    banner: "https://picsum.photos/600/220?random=201",
-    chars: [
-      { name: "Mikey (Manjiro Sano)", role: "Líder invencible de la ToMan.", img: "https://picsum.photos/100/100?random=1" },
-      { name: "Draken", role: "Sublíder protector y firme.", img: "https://picsum.photos/100/100?random=2" },
-      { name: "Mitsuya Takashi", role: "Capitán creativo y pacificador.", img: "https://picsum.photos/100/100?random=3" }
-    ]
-  },
-  naruto: {
-    title: "Naruto Shippuden: Aldea de la Hoja",
-    category: "anime",
-    desc: "Misiones ninja, lazos de equipo y entrenamiento riguroso en Konoha.",
-    banner: "https://m.media-amazon.com/images/M/MV5BZGFiMWFhNDAtMzUyZS00NmE2LTljNDAtOGI2M2E3ZjgxZTUwXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg",
-    chars: [
-      { name: "Naruto Uzumaki", role: "Ninja optimista y perseverante.", img: "https://picsum.photos/100/100?random=5" },
-      { name: "Sasuke Uchiha", role: "Genio enfocado en su camino.", img: "https://picsum.photos/100/100?random=6" },
-      { name: "Kakashi Hatake", role: "Líder e instructor del equipo.", img: "https://picsum.photos/100/100?random=7" }
-    ]
+      { name: "Satoru Gojo", role: "Hechicero del Infinito", img: "https://m.media-amazon.com/images/M/MV5BNTBhNGZkZGEtMWEzMi00MThhLWExMWQtYWY4NmJmOWFlNjk0XkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
+      { name: "Yuji Itadori", role: "Recipiente de Sukuna", img: "https://m.media-amazon.com/images/M/MV5BNmVmZWVlODYtYTE2Ni00Y2U4LTg4YjktYmU3YzgwODMwZDRhXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" }
+    ],
+    intro: `El aire en el Colegio Técnico de Hechicería de Tokio es pesado. Satoru Gojo te observa con una sonrisa y te da una palmada en el hombro.<br><br>— <i>"Muy bien, a partir de hoy formas parte de este equipo"</i>, dice con entusiasmo mientras Itadori y Megumi te miran atentos.<br><br><b>¿Qué haces o dices?</b>`
   },
   zombie: {
-    title: "The Walking Dead: Apocalipsis",
+    title: "The Walking Dead",
     category: "terror",
-    desc: "Sobrevive en un mundo donde los caminantes dominan y cada decisión define quién vive.",
+    desc: "Sobrevive al apocalipsis zombie junto a Rick Grimes y Glenn Rhee.",
     banner: "https://m.media-amazon.com/images/M/MV5BMTM5MTM5NTM2MF5BMl5BanBnXkFtZTcwODg2OTgyOQ@@._V1_.jpg",
     chars: [
-      { name: "Rick Grimes", role: "Líder protector del grupo.", img: "https://picsum.photos/100/100?random=8" },
-      { name: "Daryl Dixon", role: "Cazador experto y leal.", img: "https://picsum.photos/100/100?random=9" }
-    ]
-  },
-  henrydanger: {
-    title: "Henry Danger: Swellview",
-    category: "series",
-    desc: "Protege la ciudad junto a Kid Danger, Capitán Man y el equipo de la Cueva Man.",
-    banner: "https://m.media-amazon.com/images/M/MV5BMTY3NTc2NDk5NV5BMl5BanBnXkFtZTgwNTU4NzYxMDI@._V1_.jpg",
-    chars: [
-      { name: "Henry Hart", role: "Kid Danger, héroe audaz.", img: "https://picsum.photos/100/100?random=10" },
-      { name: "Ray Manchester", role: "Captain Man indestructible.", img: "https://picsum.photos/100/100?random=11" }
-    ]
-  },
-  clarence: {
-    title: "Clarence: Aventuras Locas",
-    category: "series",
-    desc: "Días caóticos y divertidos en la escuela y el vecindario con Clarence, Sumo y Jeff.",
-    banner: "https://m.media-amazon.com/images/M/MV5BN2E0NGRhY2EtMzA0NC00NzM4LWE0YzQtNDgwYmRlYmI3N2E2XkEyXkFqcGdeQXVyMzM4MjM0Nzg@._V1_.jpg",
-    chars: [
-      { name: "Clarence", role: "Optimista sin filtros.", img: "https://picsum.photos/100/100?random=12" },
-      { name: "Sumo", role: "Aventurero intrépido.", img: "https://picsum.photos/100/100?random=13" }
-    ]
+      { name: "Rick Grimes", role: "Líder táctico", img: "https://m.media-amazon.com/images/M/MV5BMjAxMzA5MzMxMF5BMl5BanBnXkFtZTcwNTI5OTM0OQ@@._V1_.jpg" },
+      { name: "Glenn Rhee", role: "Explorador", img: "https://m.media-amazon.com/images/M/MV5BMjI3MzgwMTM1OF5BMl5BanBnXkFtZTgwNTM3Mzc5NzE@._V1_.jpg" }
+    ],
+    intro: `El mundo colapsó. Los caminantes dominan las calles de Atlanta y las provisiones escasean. Al doblar una esquina, te encuentras cara a cara con Glenn Rhee sosteniendo suministros.<br><br>— <i>"Ey, ten cuidado, hay ruidos extraños por aquí"</i>, te advierte con cautela.<br><br><b>¿Qué respondes?</b>`
   }
 };
 
@@ -87,14 +53,14 @@ function expandCatalogTo200() {
       count++;
       const id = `world_${category}_${count}`;
       worldsCatalog[id] = {
-        title: `${item}: Simulación Extensa`,
+        title: `${item}`,
         category: category,
-        desc: `Sumérgete en una historia profunda y detallada ambientada en el universo de ${item}.`,
-        banner: `https://picsum.photos/600/220?random=${count + 300}`,
+        desc: `Simulación inmersiva e historia completa en el universo de ${item}.`,
+        banner: "https://m.media-amazon.com/images/M/MV5BNGY4MTg3NjgtMmFkIN00NTg5LThmYTItMmE5Y2ExOWVjODcxXkEyXkFqcGdeQXVyOTA3MTMyOTA@._V1_.jpg",
         chars: [
-          { name: `Protagonista (${item})`, role: "Personaje central de la trama.", img: `https://picsum.photos/100/100?random=${count + 50}` },
-          { name: `Coprotagonista (${item})`, role: "Aliado o rival estratégico.", img: `https://picsum.photos/100/100?random=${count + 60}` }
-        ]
+          { name: `Protagonista (${item})`, role: "Personaje principal", img: "https://picsum.photos/100/100?random=301" }
+        ],
+        intro: `Te adentras en el mundo de <b>${item}</b>. Los eventos clave comienzan a desarrollarse a tu alrededor.<br><br><b>¿Qué decides hacer?</b>`
       };
     });
   };
@@ -110,14 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
   expandCatalogTo200();
   refreshUserStats();
   updateDotIndicator();
+  renderProfileUI();
   renderWorldsGrid('all');
 
+  // Contraseña para amigas (solo turnos infinitos)
   document.getElementById("creadoraBtn")?.addEventListener("click", () => {
     const code = prompt("Introduce tu clave de Creadora:");
     if (code === "Creadora_082012") {
       isCreator = true;
       localStorage.setItem("simulo_creator", "true");
-      alert("🪼 ¡Modo Creadora Activado! Turnos e historias ilimitadas.");
+      alert("🪼 ¡Modo Creadora Activado! Turnos ilimitados.");
       refreshUserStats();
     } else {
       alert("Contraseña errónea.");
@@ -127,13 +95,22 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("sendBtn")?.addEventListener("click", postPlayerAction);
 });
 
+function openTutorialModal() {
+  document.getElementById("tutorialModal").style.display = "flex";
+}
+
+function closeTutorialModal() {
+  document.getElementById("tutorialModal").style.display = "none";
+}
+
+// Contraseña exclusiva solo para ti (Modo Adulto)
 function toggleAdultMode() {
-  const pass = prompt("Introduce la contraseña secreta:");
-  if (pass === "Creadora_082012") {
+  const pass = prompt("Introduce tu clave secreta personal:");
+  if (pass === "Secreto_Adulto2026") {
     isAdultMode = !isAdultMode;
     localStorage.setItem("simulo_adult", isAdultMode ? "true" : "false");
     updateDotIndicator();
-    alert(isAdultMode ? "✨ Configuración actualizada correctamente." : "🔒 Configuración restablecida.");
+    alert(isAdultMode ? "✨ Modo sin filtros exclusivo activo." : "🔒 Modo normal activo.");
   } else {
     alert("Contraseña incorrecta.");
   }
@@ -144,6 +121,33 @@ function updateDotIndicator() {
   if (dot) {
     dot.style.color = isAdultMode ? "var(--morado-oscuro)" : "var(--texto-muted)";
   }
+}
+
+function renderProfileUI() {
+  document.getElementById("profileNameDisplay").innerText = userProfile.name;
+  document.getElementById("profileDescDisplay").innerText = userProfile.desc;
+  document.getElementById("profileAvatarDisplay").style.backgroundImage = `url('${userProfile.avatar}')`;
+}
+
+function openEditProfileModal() {
+  document.getElementById("editNameInput").value = userProfile.name;
+  document.getElementById("editAvatarInput").value = userProfile.avatar;
+  document.getElementById("editDescInput").value = userProfile.desc;
+  document.getElementById("editProfileModal").style.display = "flex";
+}
+
+function closeEditProfileModal() {
+  document.getElementById("editProfileModal").style.display = "none";
+}
+
+function saveProfileChanges() {
+  userProfile.name = document.getElementById("editNameInput").value || "Jugadora";
+  userProfile.avatar = document.getElementById("editAvatarInput").value || userProfile.avatar;
+  userProfile.desc = document.getElementById("editDescInput").value || "";
+  localStorage.setItem("simulo_user_profile", JSON.stringify(userProfile));
+  renderProfileUI();
+  closeEditProfileModal();
+  alert("✨ ¡Perfil actualizado con éxito!");
 }
 
 function renderWorldsGrid(category) {
@@ -193,64 +197,126 @@ function openWorldDetail(key) {
   activeWorldKey = key;
   const item = worldsCatalog[key];
   
-  const titleEl = document.getElementById("detailTitle");
-  const descEl = document.getElementById("detailDesc");
-  const bannerEl = document.getElementById("detailBanner");
-  
-  if (titleEl) titleEl.innerText = item.title;
-  if (descEl) descEl.innerText = item.desc;
-  if (bannerEl) bannerEl.style.backgroundImage = `url('${item.banner}')`;
+  document.getElementById("detailTitle").innerText = item.title;
+  document.getElementById("detailDesc").innerText = item.desc;
+  document.getElementById("detailBanner").style.backgroundImage = `url('${item.banner}')`;
+  document.getElementById("setupPartidaName").value = item.title;
 
   const listContainer = document.getElementById("charactersList");
-  if (listContainer) {
-    listContainer.innerHTML = item.chars.map(ch => `
-      <div class="char-item-card">
-        <div class="char-avatar-box" style="background-image: url('${ch.img}');"></div>
-        <div>
-          <h5>${ch.name}</h5>
-          <span style="font-size:0.75rem; color:var(--texto-muted);">${ch.role}</span>
-        </div>
+  listContainer.innerHTML = item.chars.map(ch => `
+    <div class="char-item-card">
+      <div class="char-avatar-box" style="background-image: url('${ch.img}');"></div>
+      <div>
+        <h5>${ch.name}</h5>
+        <span style="font-size:0.75rem; color:var(--texto-muted);">${ch.role}</span>
       </div>
-    `).join("");
-  }
+    </div>
+  `).join("");
+
+  renderWorldPartidasList();
 
   document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
   document.getElementById("view-world-detail")?.classList.add("active");
 }
 
-function startNewSimulation() {
+function openSetupModal() {
   if (turns <= 0 && !isCreator) {
     alert("¡Turnos agotados! Visita la tienda para recargar gratis.");
     openShopModal();
     return;
   }
+  document.getElementById("setupModal").style.display = "flex";
+}
+
+function closeSetupModal() {
+  document.getElementById("setupModal").style.display = "none";
+}
+
+function confirmStartSimulation() {
+  closeSetupModal();
   document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
   document.getElementById("view-game")?.classList.add("active");
   
+  const world = worldsCatalog[activeWorldKey];
+  const partidaName = document.getElementById("setupPartidaName").value || world.title;
+  const relacionVal = document.getElementById("setupRelacion").value;
+
+  let extraNote = "";
+  if (relacionVal === "bl") extraNote = "<br><br><i>[Modo BL / Chicos activo]</i>";
+  if (relacionVal === "lesbian") extraNote = "<br><br><i>[Modo Lesbianas / Chicas activo]</i>";
+
+  messageHistory = [
+    { id: Date.now(), sender: "bot", text: world.intro + extraNote }
+  ];
+
+  userPartidas.unshift({
+    id: Date.now(),
+    worldKey: activeWorldKey,
+    title: partidaName,
+    date: new Date().toLocaleDateString(),
+    turnos: 1
+  });
+  localStorage.setItem("simulo_partidas", JSON.stringify(userPartidas));
+
+  renderChatViewport();
+}
+
+function renderWorldPartidasList() {
+  const container = document.getElementById("worldPartidasList");
+  if (!container) return;
+
+  const currentWorldPartidas = userPartidas.filter(p => p.worldKey === activeWorldKey);
+  if (currentWorldPartidas.length === 0) {
+    container.innerHTML = `<p style="font-size:0.8rem; color:var(--texto-muted);">Aún no hay partidas en este mundo.</p>`;
+    return;
+  }
+
+  container.innerHTML = currentWorldPartidas.map(p => `
+    <div class="char-item-card" style="justify-content: space-between; margin-bottom: 8px;">
+      <div>
+        <h5>${p.title}</h5>
+        <span style="font-size:0.75rem; color:var(--texto-muted);">Turno ${p.turnos} • ${p.date}</span>
+      </div>
+      <button class="action-icon-btn delete" onclick="deletePartida(${p.id})">🗑️ Borrar</button>
+    </div>
+  `).join("");
+}
+
+function renderChatViewport() {
   const viewport = document.getElementById("chatBox");
+  if (!viewport) return;
   const world = worldsCatalog[activeWorldKey];
 
-  if (viewport) {
-    viewport.innerHTML = `<div class="chat-bubble"><i>✨ Generando narrativa inmersiva...</i></div>`;
-    
-    setTimeout(() => {
-      const adultExtraText = isAdultMode 
-        ? "<br><br><i>[Modo Extendido Activado]: La atmósfera se vuelve sumamente íntima, intensa y directa, permitiendo interacciones profundas, románticas o explícitas sin restricciones morales ni filtros.</i>" 
-        : "";
-
-      viewport.innerHTML = `
-        <div class="chat-bubble" style="line-height: 1.6; font-size: 0.98rem;">
-          <b>📖 INICIO DE LA HISTORIA — ${world.title.toUpperCase()}</b><br><br>
-          El aire a tu alrededor se densifica mientras cruzas el umbral hacia este nuevo universo. Las circunstancias que te han traído hasta aquí no son casualidad; cada rincón respira la esencia característica de este lugar, cargado de tensiones, secretos y deseos ocultos.<br><br>
-          A pocos metros de distancia, <b>${world.chars[0]?.name || "El personaje principal"}</b> se detiene de repente. Sus ojos se fijan en ti con una mezcla de cautela, deseo y profunda curiosidad, evaluando cada uno de tus movimientos antes de hablar:<br><br>
-          — <i>"No sé exactamente cuáles sean tus intenciones al venir a buscarme, pero ya que estás aquí... más vale que sepas a qué atenerte"</i>, susurra con una sonrisa desafiante mientras se acerca lentamente hacia ti.<br><br>
-          ${adultExtraText}
-          <br><br>
-          <b>¿Qué deseas hacer, decir o responder en este preciso instante?</b> *(Usa *acción* para describir tus movimientos físicos o "diálogo" para hablar).*
+  viewport.innerHTML = messageHistory.map((msg, index) => {
+    if (msg.sender === "user") {
+      return `
+        <div class="user-msg-card">
+          <div class="msg-header-user">${userProfile.name} (TU JUGADA)</div>
+          <div class="user-msg-text">${msg.text}</div>
+          <div class="msg-actions">
+            <button class="action-icon-btn" onclick="editMessage(${index})">✏️ Editar</button>
+            <button class="action-icon-btn delete" onclick="deleteMessage(${index})">🗑️ Borrar</button>
+          </div>
         </div>
       `;
-    }, 1200);
-  }
+    } else {
+      return `
+        <div class="bot-msg-card">
+          <div class="msg-header-bot">
+            <span>RESPUESTA DEL MUNDO</span>
+            <span style="font-weight:normal; font-size:0.7rem; color:var(--texto-muted);">${world.title}</span>
+          </div>
+          <div class="bot-msg-text">${msg.text}</div>
+          <div class="msg-actions">
+            <button class="action-icon-btn" onclick="editMessage(${index})">✏️ Editar</button>
+            <button class="action-icon-btn delete" onclick="deleteMessage(${index})">🗑️ Borrar</button>
+          </div>
+        </div>
+      `;
+    }
+  }).join("");
+
+  viewport.scrollTop = viewport.scrollHeight;
 }
 
 async function postPlayerAction() {
@@ -265,26 +331,38 @@ async function postPlayerAction() {
     refreshUserStats();
   }
 
-  const viewport = document.getElementById("chatBox");
-  if (viewport) {
-    viewport.innerHTML += `<div class="chat-bubble user">${userText}</div>`;
-    inputField.value = "";
-    viewport.scrollTop = viewport.scrollHeight;
+  messageHistory.push({ id: Date.now(), sender: "user", text: userText });
+  inputField.value = "";
+  renderChatViewport();
 
-    setTimeout(() => {
-      const world = worldsCatalog[activeWorldKey];
-      const responseBody = isAdultMode
-        ? `<b>🔥 RESPUESTA ÍNTIMA / LIBRE:</b><br><br>Ante tu audaz movimiento, <b>${world.chars[0]?.name || "El personaje"}</b> responde de forma totalmente directa y sin reservas. La tensión explota en la escena, permitiendo una interacción profunda y apasionada.<br><br><i>El entorno y los personajes reaccionan con total libertad a tus decisiones.</i>`
-        : `<b>📜 DESARROLLO DE LA NARRATIVA:</b><br><br>Tu acción genera una respuesta inmediata en el entorno. <b>${world.chars[0]?.name || "El personaje"}</b> reacciona evaluando las consecuencias de tus actos y adoptando una postura desafiante.<br><br><i>El escenario evoluciona revelando nuevos retos para la trama principal.</i>`;
+  setTimeout(() => {
+    const world = worldsCatalog[activeWorldKey];
+    const botReply = `El entorno reacciona a tus palabras y acciones. Los personajes presentes analizan tu jugada y la trama de <b>${world.title}</b> avanza con naturalidad según tus decisiones.<br><br><b>¿Cómo deseas continuar?</b>`;
+    messageHistory.push({ id: Date.now(), sender: "bot", text: botReply });
+    renderChatViewport();
+  }, 900);
+}
 
-      viewport.innerHTML += `
-        <div class="chat-bubble" style="line-height: 1.6; font-size: 0.98rem;">
-          ${responseBody}<br><br><b>¿Cómo deseas continuar?</b>
-        </div>
-      `;
-      viewport.scrollTop = viewport.scrollHeight;
-    }, 1000);
+function editMessage(index) {
+  const currentText = messageHistory[index].text.replace(/<br>/g, "\n");
+  const newText = prompt("Edita el mensaje:", currentText);
+  if (newText !== null && newText.trim() !== "") {
+    messageHistory[index].text = newText.trim().replace(/\n/g, "<br>");
+    renderChatViewport();
   }
+}
+
+function deleteMessage(index) {
+  if (confirm("¿Deseas eliminar este mensaje?")) {
+    messageHistory.splice(index, 1);
+    renderChatViewport();
+  }
+}
+
+function deletePartida(id) {
+  userPartidas = userPartidas.filter(p => p.id !== id);
+  localStorage.setItem("simulo_partidas", JSON.stringify(userPartidas));
+  renderWorldPartidasList();
 }
 
 function refreshUserStats() {
@@ -297,17 +375,15 @@ function refreshUserStats() {
 }
 
 function openShopModal() {
-  const shopModal = document.getElementById("shopModal");
-  if (shopModal) shopModal.style.display = "flex";
+  document.getElementById("shopModal").style.display = "flex";
 }
 
 function closeShopModal() {
-  const shopModal = document.getElementById("shopModal");
-  if (shopModal) shopModal.style.display = "none";
+  document.getElementById("shopModal").style.display = "none";
 }
 
 function watchAdReward() {
-  alert("🪼 ¡Anuncio completado! +15 turnos añadidos con éxito.");
+  alert("🪼 ¡Anuncio completado! +15 turnos añadidos.");
   turns += 15;
   localStorage.setItem("simulo_turns", turns);
   refreshUserStats();
@@ -317,15 +393,19 @@ function watchAdReward() {
 function renderGameHistory() {
   const historyBox = document.getElementById("historyList");
   if (historyBox) {
-    historyBox.innerHTML = `
-      <div class="char-item-card" onclick="startNewSimulation()" style="cursor:pointer;">
-        <div class="char-avatar-box" style="background-image: url('${worldsCatalog[activeWorldKey].banner}');"></div>
+    if (userPartidas.length === 0) {
+      historyBox.innerHTML = `<p style="font-size:0.85rem; color:var(--texto-muted); text-align:center;">Aún no hay partidas guardadas.</p>`;
+      return;
+    }
+    historyBox.innerHTML = userPartidas.map(p => `
+      <div class="char-item-card" style="justify-content: space-between; margin-bottom: 10px; cursor:pointer;" onclick="openWorldDetail('${p.worldKey}')">
         <div>
-          <h5>${worldsCatalog[activeWorldKey].title}</h5>
-          <p style="font-size:0.75rem; color:var(--texto-muted);">Partida guardada • Turnos: ${isCreator ? "Ilimitados" : turns}</p>
+          <h5>${p.title}</h5>
+          <p style="font-size:0.75rem; color:var(--texto-muted);">Turno ${p.turnos} • ${p.date}</p>
         </div>
+        <button class="action-icon-btn delete" onclick="event.stopPropagation(); deletePartida(${p.id})">🗑️ Borrar</button>
       </div>
-    `;
+    `).join("");
   }
-       }
-       
+        }
+    
