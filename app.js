@@ -7,12 +7,12 @@ let userData = {
   gamesCount: 0
 };
 
-// Base de datos de mundos originales listos para buscarse por nombre
+// Base de datos con portadas visuales y buscador integrado
 const worldsDatabase = [
-  { id: "jjk", title: "Jujutsu Kaisen", genre: "anime", desc: "Maldiciones y hechicería. Estás en el Cole..." },
-  { id: "twd", title: "The Walking Dead", genre: "terror", desc: "Sobrevive al apocalipsis zombie junto a Ri..." },
-  { id: "ds", title: "Demon Slayer", genre: "anime", desc: "Simulación inmersiva e historia completa e..." },
-  { id: "mha", title: "My Hero Academia", genre: "anime", desc: "Simulación inmersiva e historia completa e..." }
+  { id: "jjk", title: "Jujutsu Kaisen", genre: "anime", cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500", desc: "Maldiciones y hechicería. Estás en el Colegio Técnico de Magia." },
+  { id: "twd", title: "The Walking Dead", genre: "terror", cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500", desc: "Sobrevive al apocalipsis zombie junto a Rick y los supervivientes." },
+  { id: "ds", title: "Demon Slayer", genre: "anime", cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500", desc: "Simulación inmersiva e historia completa en la era Taisho." },
+  { id: "mha", title: "My Hero Academia", genre: "anime", cover: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500", desc: "Simulación inmersiva y entrenamiento de héroes profesionales." }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -71,7 +71,9 @@ function renderWorlds(list) {
   list.forEach(w => {
     container.innerHTML += `
       <div class="world-card" onclick="alert('Abriendo el mundo: ${w.title}')">
-        <span class="world-badge-tag">🪼 200+ Mundos</span>
+        <div class="world-cover" style="background-image: url('${w.cover}');">
+          <span class="world-badge-tag">🪼 200+ Mundos</span>
+        </div>
         <div class="world-info">
           <h4>${w.title}</h4>
           <p>${w.desc}</p>
@@ -93,7 +95,7 @@ function filterWorlds(genre) {
   }
 }
 
-// FUNCIÓN DE BÚSQUEDA EN TIEMPO REAL POR NOMBRE
+// BUSCADOR EN TIEMPO REAL
 function searchWorlds() {
   const query = document.getElementById("worldSearchInput").value.toLowerCase().trim();
   const filtered = worldsDatabase.filter(w => 
