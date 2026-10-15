@@ -1,230 +1,249 @@
-const MASTER_API_KEY = typeof process !== 'undefined' && process.env && process.env.MASTER_API_KEY 
-  ? process.env.MASTER_API_KEY 
-  : "";
-
-let turns = parseInt(localStorage.getItem("simulo_turns")) || 50;
-let isCreator = localStorage.getItem("simulo_creator") === "true";
-let isAdultMode = localStorage.getItem("simulo_adult") === "true";
-let activeWorldKey = "jujutsu";
-let messageHistory = [];
-let userPartidas = JSON.parse(localStorage.getItem("simulo_partidas")) || [];
-
-let userProfile = JSON.parse(localStorage.getItem("simulo_user_profile")) || {
+// ==========================================
+// ESTADO GLOBAL Y DATOS DE LA PLATAFORMA
+// ==========================================
+let userData = {
   name: "Jugadora SimulO",
-  avatar: "https://picsum.photos/100/100?random=99",
-  desc: "Apasionada por los mundos de rol y simulación."
+  desc: "Exploradora de universos y creadora de historias.",
+  avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300",
+  turns: 50,
+  zaps: 100,
+  isVIP: false,
+  gamesCount: 0,
+  memoryText: "",
+  currentModel: "Vanilla V3",
+  adultMode: false
 };
 
-const mainWorlds = {
-  jujutsu: {
-    title: "Jujutsu Kaisen",
-    category: "anime",
-    desc: "Maldiciones y hechicería. Estás en el Colegio Técnico de Tokio junto a Satoru Gojo, Megumi, Itadori y Nobara.",
-    banner: "https://m.media-amazon.com/images/M/MV5BNGY4MTg3NjgtMmFkIN00NTg5LThmYTItMmE5Y2ExOWVjODcxXkEyXkFqcGdeQXVyOTA3MTMyOTA@._V1_.jpg",
-    chars: [
-      { name: "Satoru Gojo", role: "Hechicero del Infinito", img: "https://m.media-amazon.com/images/M/MV5BNTBhNGZkZGEtMWEzMi00MThhLWExMWQtYWY4NmJmOWFlNjk0XkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" },
-      { name: "Yuji Itadori", role: "Recipiente de Sukuna", img: "https://m.media-amazon.com/images/M/MV5BNmVmZWVlODYtYTE2Ni00Y2U4LTg4YjktYmU3YzgwODMwZDRhXkEyXkFqcGdeQXVyMzgxNDA4MjM@._V1_.jpg" }
-    ],
-    intro: `El aire en el Colegio Técnico de Hechicería de Tokio es pesado. Satoru Gojo te observa con una sonrisa y te da una palmada en el hombro.<br><br>— <i>"Muy bien, a partir de hoy formas parte de este equipo"</i>, dice con entusiasmo mientras Itadori y Megumi te miran atentos.<br><br><b>¿Qué haces o dices?</b>`
+// Base de datos masiva con mundos de franquicias oficiales
+const worldsDatabase = [
+  {
+    id: "mha",
+    title: "My Hero Academia",
+    genre: "anime",
+    author: "Oficial SimulO",
+    cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500",
+    desc: "Un mundo donde el 80% de la población posee superpoderes llamados 'Quirks'. Conviértete en héroe profesional o únete a la Liga de Villanos.",
+    characters: [
+      { name: "Katsuki Bakugo", role: "Rival explosivo", avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200" },
+      { name: "Shoto Todoroki", role: "Mitad Fuego / Mitad Hielo", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200" },
+      { name: "Himiko Toga", role: "Villana impredecible", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" }
+    ]
   },
-  zombie: {
+  {
+    id: "twd",
     title: "The Walking Dead",
-    category: "terror",
-    desc: "Sobrevive al apocalipsis zombie junto a Rick Grimes y Glenn Rhee.",
-    banner: "https://m.media-amazon.com/images/M/MV5BMTM5MTM5NTM2MF5BMl5BanBnXkFtZTcwODg2OTgyOQ@@._V1_.jpg",
-    chars: [
-      { name: "Rick Grimes", role: "Líder táctico", img: "https://m.media-amazon.com/images/M/MV5BMjAxMzA5MzMxMF5BMl5BanBnXkFtZTcwNTI5OTM0OQ@@._V1_.jpg" },
-      { name: "Glenn Rhee", role: "Explorador", img: "https://m.media-amazon.com/images/M/MV5BMjI3MzgwMTM1OF5BMl5BanBnXkFtZTgwNTM3Mzc5NzE@._V1_.jpg" }
-    ],
-    intro: `El mundo colapsó. Los caminantes dominan las calles de Atlanta y las provisiones escasean. Al doblar una esquina, te encuentras cara a cara con Glenn Rhee sosteniendo suministros.<br><br>— <i>"Ey, ten cuidado, hay ruidos extraños por aquí"</i>, te advierte con cautela.<br><br><b>¿Qué respondes?</b>`
+    genre: "terror",
+    author: "Oficial SimulO",
+    cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500",
+    desc: "El mundo ha caído ante una pandemia zombie. Los muertos caminan y los vivos son la verdadera amenaza. ¿Podrás sobrevivir?",
+    characters: [
+      { name: "Daryl Dixon", role: "Ballestero solitario", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200" },
+      { name: "Maggie Rhee", role: "Lideresa de Hilltop", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" },
+      { name: "Negan Smith", role: "Líder de los Salvadores", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200" }
+    ]
+  },
+  {
+    id: "naruto",
+    title: "Naruto Shippuden",
+    genre: "anime",
+    author: "Oficial SimulO",
+    cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500",
+    desc: "Aldeas ocultas, guerras ninja, jutsus legendarios y bestias con colas. Forja tu propio camino ninja en el País del Fuego.",
+    characters: [
+      { name: "Kakashi Hatake", role: "Ninja Copión", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200" },
+      { name: "Uchiha Sasuke", role: "Vengador sombrío", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200" },
+      { name: "Tsunade Senju", role: "Quinta Hokage", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" }
+    ]
+  },
+  {
+    id: "cyberpunk",
+    title: "Cyberpunk Edge",
+    genre: "series",
+    author: "Oficial SimulO",
+    cover: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500",
+    desc: "Neon, implantes cibernéticos y corporaciones corruptas en Night City. Sobrevive al límite de la psicosis cibernética.",
+    characters: [
+      { name: "Lucy Kushinada", role: "Netrunner experta", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200" },
+      { name: "David Martinez", role: "Mercenario novato", avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200" }
+    ]
   }
-};
+];
 
-const worldsCatalog = { ...mainWorlds };
+let activeWorld = null;
+let activePartidas = [];
+let communityIdeas = [
+  { text: "Añadir modo multijugador en tiempo real para chatear con amigas", votes: 42 },
+  { text: "Más avatares oficiales de anime y manhwas", votes: 31 }
+];
 
-function expandCatalogTo200() {
-  const animeList = ["Demon Slayer", "My Hero Academia", "Attack on Titan", "One Piece", "Bleach", "Chainsaw Man", "Death Note", "Haikyuu", "Dragon Ball Z", "Weak Hero Class", "Blue Lock", "Solo Leveling", "Bungou Stray Dogs"];
-  const terrorList = ["Creepypastas", "El Conjuro", "Viernes 13", "Scream", "Resident Evil", "Silent Hill", "Five Nights at Freddy's", "Saw"];
-  const novelasList = ["Oscura Obsesión", "El Amor del CEO", "Matrimonio Forzado", "Enemigos a Amantes", "Peligro en la Mafia", "Colegio Privado Elite"];
-
-  let count = Object.keys(worldsCatalog).length;
-  const buildBatch = (list, category) => {
-    list.forEach((item) => {
-      count++;
-      const id = `world_${category}_${count}`;
-      worldsCatalog[id] = {
-        title: `${item}`,
-        category: category,
-        desc: `Simulación inmersiva e historia completa en el universo de ${item}.`,
-        banner: "https://m.media-amazon.com/images/M/MV5BNGY4MTg3NjgtMmFkIN00NTg5LThmYTItMmE5Y2ExOWVjODcxXkEyXkFqcGdeQXVyOTA3MTMyOTA@._V1_.jpg",
-        chars: [
-          { name: `Protagonista (${item})`, role: "Personaje principal", img: "https://picsum.photos/100/100?random=301" }
-        ],
-        intro: `Te adentras en el mundo de <b>${item}</b>. Los eventos clave comienzan a desarrollarse a tu alrededor.<br><br><b>¿Qué decides hacer?</b>`
-      };
-    });
-  };
-
-  while (count < 200) {
-    buildBatch(animeList, "anime");
-    buildBatch(terrorList, "terror");
-    buildBatch(novelasList, "novela");
-  }
-}
-
+// ==========================================
+// INICIALIZACIÓN
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-  expandCatalogTo200();
-  refreshUserStats();
-  updateDotIndicator();
-  renderProfileUI();
-  renderWorldsGrid('all');
-
-  // Contraseña para amigas (solo turnos infinitos)
-  document.getElementById("creadoraBtn")?.addEventListener("click", () => {
-    const code = prompt("Introduce tu clave de Creadora:");
-    if (code === "Creadora_082012") {
-      isCreator = true;
-      localStorage.setItem("simulo_creator", "true");
-      alert("🪼 ¡Modo Creadora Activado! Turnos ilimitados.");
-      refreshUserStats();
-    } else {
-      alert("Contraseña errónea.");
-    }
-  });
-
-  document.getElementById("sendBtn")?.addEventListener("click", postPlayerAction);
+  renderWorlds(worldsDatabase);
+  updateUI();
+  renderCommunityIdeas();
+  
+  // Evento botón enviar chat
+  const sendBtn = document.getElementById("sendBtn");
+  if (sendBtn) {
+    sendBtn.addEventListener("click", sendMessage);
+  }
+  
+  const userInput = document.getElementById("userInput");
+  if (userInput) {
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  }
 });
 
-function openTutorialModal() {
-  document.getElementById("tutorialModal").style.display = "flex";
+// ==========================================
+// CONTROL DE UI Y VISTAS
+// ==========================================
+function switchTab(tabId) {
+  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
+  
+  if (tabId === 'explore') {
+    document.getElementById("view-explore").classList.add("active");
+  } else if (tabId === 'profile') {
+    document.getElementById("view-profile").classList.add("active");
+  } else if (tabId === 'game') {
+    document.getElementById("view-game").classList.add("active");
+  }
+  updateUI();
 }
 
-function closeTutorialModal() {
-  document.getElementById("tutorialModal").style.display = "none";
-}
-
-// Contraseña exclusiva solo para ti (Modo Adulto)
-function toggleAdultMode() {
-  const pass = prompt("Introduce tu clave secreta personal:");
-  if (pass === "Secreto_Adulto2026") {
-    isAdultMode = !isAdultMode;
-    localStorage.setItem("simulo_adult", isAdultMode ? "true" : "false");
-    updateDotIndicator();
-    alert(isAdultMode ? "✨ Modo sin filtros exclusivo activo." : "🔒 Modo normal activo.");
+function updateUI() {
+  document.getElementById("turnsCount").textContent = userData.turns;
+  document.getElementById("gamesCount").textContent = userData.gamesCount;
+  document.getElementById("profileNameDisplay").textContent = userData.name;
+  document.getElementById("profileDescDisplay").textContent = userData.desc;
+  document.getElementById("profileAvatarDisplay").style.backgroundImage = `url('${userData.avatar}')`;
+  
+  const badge = document.getElementById("creatorStatusBadge");
+  if (userData.isVIP) {
+    badge.textContent = "Creadora VIP Verificada 👑";
+    badge.style.background = "#FFD700";
+    badge.style.color = "#333";
   } else {
-    alert("Contraseña incorrecta.");
+    badge.textContent = "Cuenta Gratuita (Canjea un video para ser VIP)";
+    badge.style.background = "#F3E8FF";
+    badge.style.color = "var(--morado-oscuro)";
   }
 }
 
-function updateDotIndicator() {
-  const dot = document.getElementById("secretDotBtn");
-  if (dot) {
-    dot.style.color = isAdultMode ? "var(--morado-oscuro)" : "var(--texto-muted)";
-  }
+// ==========================================
+// REGALO DE BIENVENIDA
+// ==========================================
+function openGiftAndEnter() {
+  document.getElementById("giftModal").style.display = "none";
+  userData.turns += 25;
+  updateUI();
+  alert("🎁 ¡Has abierto tu regalo de bienvenida! Se han acreditado +25 turnos extra a tu cuenta.");
 }
 
-function renderProfileUI() {
-  document.getElementById("profileNameDisplay").innerText = userProfile.name;
-  document.getElementById("profileDescDisplay").innerText = userProfile.desc;
-  document.getElementById("profileAvatarDisplay").style.backgroundImage = `url('${userProfile.avatar}')`;
-}
-
-function openEditProfileModal() {
-  document.getElementById("editNameInput").value = userProfile.name;
-  document.getElementById("editAvatarInput").value = userProfile.avatar;
-  document.getElementById("editDescInput").value = userProfile.desc;
-  document.getElementById("editProfileModal").style.display = "flex";
-}
-
-function closeEditProfileModal() {
-  document.getElementById("editProfileModal").style.display = "none";
-}
-
-function saveProfileChanges() {
-  userProfile.name = document.getElementById("editNameInput").value || "Jugadora";
-  userProfile.avatar = document.getElementById("editAvatarInput").value || userProfile.avatar;
-  userProfile.desc = document.getElementById("editDescInput").value || "";
-  localStorage.setItem("simulo_user_profile", JSON.stringify(userProfile));
-  renderProfileUI();
-  closeEditProfileModal();
-  alert("✨ ¡Perfil actualizado con éxito!");
-}
-
-function renderWorldsGrid(category) {
-  const grid = document.getElementById("worldsGridContainer");
-  if (!grid) return;
-
-  const filteredKeys = Object.keys(worldsCatalog).filter(k => {
-    if (category === 'all') return true;
-    return worldsCatalog[k].category === category;
-  });
-
-  grid.innerHTML = filteredKeys.map(key => {
-    const w = worldsCatalog[key];
-    return `
-      <div class="world-bubble-card" onclick="openWorldDetail('${key}')">
-        <div class="bubble-banner" style="background-image: url('${w.banner}');">
-          <span class="bubble-badge">🪼 200+ Mundos</span>
+// ==========================================
+// MUNDOS Y FILTROS
+// ==========================================
+function renderWorlds(list) {
+  const container = document.getElementById("worldsGridContainer");
+  if (!container) return;
+  
+  container.innerHTML = "";
+  list.forEach(w => {
+    container.innerHTML += `
+      <div class="world-card" onclick="openWorldDetail('${w.id}')">
+        <div class="world-cover" style="background-image: url('${w.cover}');">
+          <span class="world-tag">${w.genre.toUpperCase()}</span>
         </div>
-        <div class="bubble-info">
+        <div class="world-info">
           <h4>${w.title}</h4>
-          <p>${w.desc.substring(0, 42)}...</p>
+          <p>${w.desc.substring(0, 65)}...</p>
+          <button class="btn-play">Explorar Mundo</button>
         </div>
       </div>
     `;
-  }).join("");
+  });
 }
 
-function filterWorlds(category) {
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-  if (event && event.target) event.target.classList.add("active");
-  renderWorldsGrid(category);
-}
-
-function switchTab(targetId) {
-  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-
-  if (targetId === 'explore') document.getElementById("view-explore")?.classList.add("active");
-  if (targetId === 'history') {
-    document.getElementById("view-history")?.classList.add("active");
-    renderGameHistory();
-  }
-  if (targetId === 'profile') document.getElementById("view-profile")?.classList.add("active");
-}
-
-function openWorldDetail(key) {
-  activeWorldKey = key;
-  const item = worldsCatalog[key];
+function filterWorlds(genre) {
+  document.querySelectorAll(".genre-chips .chip").forEach(c => c.classList.remove("active"));
+  event.target.classList.add("active");
   
-  document.getElementById("detailTitle").innerText = item.title;
-  document.getElementById("detailDesc").innerText = item.desc;
-  document.getElementById("detailBanner").style.backgroundImage = `url('${item.banner}')`;
-  document.getElementById("setupPartidaName").value = item.title;
-
-  const listContainer = document.getElementById("charactersList");
-  listContainer.innerHTML = item.chars.map(ch => `
-    <div class="char-item-card">
-      <div class="char-avatar-box" style="background-image: url('${ch.img}');"></div>
-      <div>
-        <h5>${ch.name}</h5>
-        <span style="font-size:0.75rem; color:var(--texto-muted);">${ch.role}</span>
-      </div>
-    </div>
-  `).join("");
-
-  renderWorldPartidasList();
-
-  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
-  document.getElementById("view-world-detail")?.classList.add("active");
+  if (genre === 'all') {
+    renderWorlds(worldsDatabase);
+  } else {
+    const filtered = worldsDatabase.filter(w => w.genre === genre);
+    renderWorlds(filtered);
+  }
 }
 
-function openSetupModal() {
-  if (turns <= 0 && !isCreator) {
-    alert("¡Turnos agotados! Visita la tienda para recargar gratis.");
-    openShopModal();
+function searchWorlds() {
+  const query = document.getElementById("worldSearchInput").value.toLowerCase();
+  const filtered = worldsDatabase.filter(w => w.title.toLowerCase().includes(query) || w.desc.toLowerCase().includes(query));
+  renderWorlds(filtered);
+}
+
+// ==========================================
+// DETALLE DE MUNDO Y PARTIDAS
+// ==========================================
+function openWorldDetail(worldId) {
+  activeWorld = worldsDatabase.find(w => w.id === worldId);
+  if (!activeWorld) return;
+  
+  document.getElementById("detailTitle").textContent = activeWorld.title;
+  document.getElementById("detailDesc").textContent = activeWorld.desc;
+  document.getElementById("detailBanner").style.backgroundImage = `url('${activeWorld.cover}')`;
+  
+  // Renderizar personajes
+  const charContainer = document.getElementById("charactersList");
+  charContainer.innerHTML = "";
+  activeWorld.characters.forEach(c => {
+    charContainer.innerHTML += `
+      <div class="char-item-card">
+        <div class="char-mini-avatar" style="background-image: url('${c.avatar}');"></div>
+        <div>
+          <h5>${c.name}</h5>
+          <p style="font-size:0.72rem; color:var(--texto-muted);">${c.role}</p>
+        </div>
+      </div>
+    `;
+  });
+  
+  renderWorldPartidas();
+  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-world-detail").classList.add("active");
+}
+
+function renderWorldPartidas() {
+  const listContainer = document.getElementById("worldPartidasList");
+  if (!activeWorld) return;
+  
+  const worldPartidas = activePartidas.filter(p => p.worldId === activeWorld.id);
+  if (worldPartidas.length === 0) {
+    listContainer.innerHTML = `<p style="font-size:0.8rem; color:var(--texto-muted);">No tienes partidas activas en este mundo. ¡Crea una!</p>`;
     return;
   }
+  
+  listContainer.innerHTML = "";
+  worldPartidas.forEach((p, idx) => {
+    listContainer.innerHTML += `
+      <div style="background:var(--bg-app); padding:12px; border-radius:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h5 style="color:var(--morado-oscuro);">${p.name}</h5>
+          <p style="font-size:0.75rem; color:var(--texto-muted);">Rol: ${p.role} | Edad: ${p.edad}</p>
+        </div>
+        <button class="creator-badge-btn" onclick="resumeGame(${idx})">Continuar ➔</button>
+      </div>
+    `;
+  });
+}
+
+// ==========================================
+// CONFIGURACIÓN Y INICIO DE PARTIDA
+// ==========================================
+function openSetupModal() {
   document.getElementById("setupModal").style.display = "flex";
 }
 
@@ -233,179 +252,247 @@ function closeSetupModal() {
 }
 
 function confirmStartSimulation() {
-  closeSetupModal();
-  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
-  document.getElementById("view-game")?.classList.add("active");
+  const edad = document.getElementById("setupEdad").value || "18";
+  const nombre = document.getElementById("setupNombre").value || userData.name;
+  const prof = document.getElementById("setupProf").value || "Aventurera";
+  const arma = document.getElementById("setupArma").value || "Ninguna";
+  const relacion = document.getElementById("setupRelacion").value;
+  const partidaName = document.getElementById("setupPartidaName").value || "Partida Nueva";
   
-  const world = worldsCatalog[activeWorldKey];
-  const partidaName = document.getElementById("setupPartidaName").value || world.title;
-  const relacionVal = document.getElementById("setupRelacion").value;
-
-  let extraNote = "";
-  if (relacionVal === "bl") extraNote = "<br><br><i>[Modo BL / Chicos activo]</i>";
-  if (relacionVal === "lesbian") extraNote = "<br><br><i>[Modo Lesbianas / Chicas activo]</i>";
-
-  messageHistory = [
-    { id: Date.now(), sender: "bot", text: world.intro + extraNote }
-  ];
-
-  userPartidas.unshift({
-    id: Date.now(),
-    worldKey: activeWorldKey,
-    title: partidaName,
-    date: new Date().toLocaleDateString(),
-    turnos: 1
-  });
-  localStorage.setItem("simulo_partidas", JSON.stringify(userPartidas));
-
-  renderChatViewport();
-}
-
-function renderWorldPartidasList() {
-  const container = document.getElementById("worldPartidasList");
-  if (!container) return;
-
-  const currentWorldPartidas = userPartidas.filter(p => p.worldKey === activeWorldKey);
-  if (currentWorldPartidas.length === 0) {
-    container.innerHTML = `<p style="font-size:0.8rem; color:var(--texto-muted);">Aún no hay partidas en este mundo.</p>`;
+  if (userData.turns <= 0) {
+    alert("¡No tienes suficientes turnos! Visita la tienda o comparte un video para recargar.");
+    closeSetupModal();
+    openShopModal();
     return;
   }
-
-  container.innerHTML = currentWorldPartidas.map(p => `
-    <div class="char-item-card" style="justify-content: space-between; margin-bottom: 8px;">
-      <div>
-        <h5>${p.title}</h5>
-        <span style="font-size:0.75rem; color:var(--texto-muted);">Turno ${p.turnos} • ${p.date}</span>
-      </div>
-      <button class="action-icon-btn delete" onclick="deletePartida(${p.id})">🗑️ Borrar</button>
-    </div>
-  `).join("");
-}
-
-function renderChatViewport() {
-  const viewport = document.getElementById("chatBox");
-  if (!viewport) return;
-  const world = worldsCatalog[activeWorldKey];
-
-  viewport.innerHTML = messageHistory.map((msg, index) => {
-    if (msg.sender === "user") {
-      return `
-        <div class="user-msg-card">
-          <div class="msg-header-user">${userProfile.name} (TU JUGADA)</div>
-          <div class="user-msg-text">${msg.text}</div>
-          <div class="msg-actions">
-            <button class="action-icon-btn" onclick="editMessage(${index})">✏️ Editar</button>
-            <button class="action-icon-btn delete" onclick="deleteMessage(${index})">🗑️ Borrar</button>
-          </div>
-        </div>
-      `;
-    } else {
-      return `
-        <div class="bot-msg-card">
-          <div class="msg-header-bot">
-            <span>RESPUESTA DEL MUNDO</span>
-            <span style="font-weight:normal; font-size:0.7rem; color:var(--texto-muted);">${world.title}</span>
-          </div>
-          <div class="bot-msg-text">${msg.text}</div>
-          <div class="msg-actions">
-            <button class="action-icon-btn" onclick="editMessage(${index})">✏️ Editar</button>
-            <button class="action-icon-btn delete" onclick="deleteMessage(${index})">🗑️ Borrar</button>
-          </div>
-        </div>
-      `;
-    }
-  }).join("");
-
-  viewport.scrollTop = viewport.scrollHeight;
-}
-
-async function postPlayerAction() {
-  const inputField = document.getElementById("userInput");
-  if (!inputField) return;
-  const userText = inputField.value.trim();
-  if (!userText) return;
-
-  if (!isCreator) {
-    turns--;
-    localStorage.setItem("simulo_turns", turns);
-    refreshUserStats();
-  }
-
-  messageHistory.push({ id: Date.now(), sender: "user", text: userText });
-  inputField.value = "";
-  renderChatViewport();
-
-  setTimeout(() => {
-    const world = worldsCatalog[activeWorldKey];
-    const botReply = `El entorno reacciona a tus palabras y acciones. Los personajes presentes analizan tu jugada y la trama de <b>${world.title}</b> avanza con naturalidad según tus decisiones.<br><br><b>¿Cómo deseas continuar?</b>`;
-    messageHistory.push({ id: Date.now(), sender: "bot", text: botReply });
-    renderChatViewport();
-  }, 900);
-}
-
-function editMessage(index) {
-  const currentText = messageHistory[index].text.replace(/<br>/g, "\n");
-  const newText = prompt("Edita el mensaje:", currentText);
-  if (newText !== null && newText.trim() !== "") {
-    messageHistory[index].text = newText.trim().replace(/\n/g, "<br>");
-    renderChatViewport();
-  }
-}
-
-function deleteMessage(index) {
-  if (confirm("¿Deseas eliminar este mensaje?")) {
-    messageHistory.splice(index, 1);
-    renderChatViewport();
-  }
-}
-
-function deletePartida(id) {
-  userPartidas = userPartidas.filter(p => p.id !== id);
-  localStorage.setItem("simulo_partidas", JSON.stringify(userPartidas));
-  renderWorldPartidasList();
-}
-
-function refreshUserStats() {
-  const displayVal = isCreator ? "∞" : turns;
-  const turnsCount = document.getElementById("turnsCount");
-  const gameTurnsCounter = document.getElementById("gameTurnsCounter");
   
-  if (turnsCount) turnsCount.innerText = displayVal;
-  if (gameTurnsCounter) gameTurnsCounter.innerText = `Turnos: ${displayVal}`;
+  const newPartida = {
+    worldId: activeWorld.id,
+    worldTitle: activeWorld.title,
+    name: partidaName,
+    edad,
+    nombre,
+    prof,
+    arma,
+    relacion,
+    messages: [
+      { sender: "system", text: `[Simulación iniciada en: ${activeWorld.title} | Modelo: ${userData.currentModel} | Dinámica: ${relacion}]` },
+      { sender: "ai", text: `Te encuentras en las calles de ${activeWorld.title}. El ambiente es tenso y cada decisión cuenta. Te presentas como ${nombre}, ${prof}, de ${edad} años. ¿Qué haces ahora?` }
+    ]
+  };
+  
+  activePartidas.push(newPartida);
+  userData.gamesCount++;
+  userData.turns--;
+  closeSetupModal();
+  loadChatSession(newPartida);
+  switchTab('game');
 }
 
-function openShopModal() {
-  document.getElementById("shopModal").style.display = "flex";
+let currentActiveGame = null;
+function loadGameSession(partidaObj) {
+  currentActiveGame = partidaObj;
+  const chatBox = document.getElementById("chatBox");
+  chatBox.innerHTML = "";
+  
+  currentActiveGame.messages.forEach(m => {
+    appendMessageUI(m.sender, m.text);
+  });
 }
 
-function closeShopModal() {
-  document.getElementById("shopModal").style.display = "none";
+function resumeGame(index) {
+  const worldPartidas = activePartidas.filter(p => p.worldId === activeWorld.id);
+  const target = worldPartidas[index];
+  loadGameSession(target);
+  switchTab('game');
+}
+
+// ==========================================
+// CHAT E INTERACCIÓN CON IA
+// ==========================================
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
+  
+  if (userData.turns <= 0) {
+    alert("¡Te has quedado sin turnos! Abre la tienda o canjea un video en redes para continuar.");
+    openShopModal();
+    return;
+  }
+  
+  userData.turns--;
+  updateUI();
+  
+  appendMessageUI("user", text);
+  if (currentActiveGame) {
+    currentActiveGame.messages.push({ sender: "user", text });
+  }
+  
+  input.value = "";
+  
+  // Simulación de respuesta inmersiva de IA según el modelo activo
+  setTimeout(() => {
+    let aiReply = generateAIReply(text);
+    appendMessageUI("ai", aiReply);
+    if (currentActiveGame) {
+      currentActiveGame.messages.push({ sender: "ai", text: aiReply });
+    }
+  }, 800);
+}
+
+function appendMessageUI(sender, text) {
+  const chatBox = document.getElementById("chatBox");
+  const bubble = document.createElement("div");
+  bubble.className = sender === "user" ? "chat-msg user-bubble" : (sender === "system" ? "chat-msg system-bubble" : "chat-msg ai-bubble");
+  bubble.textContent = text;
+  chatBox.appendChild(bubble);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function generateAIReply(userText) {
+  if (userData.currentModel === 'Manzana Verde') {
+    return `[Manzana Verde]: Analizando tu acción "${userText}". El entorno reacciona de forma directa y precisa a tu movimiento.`;
+  } else if (userData.currentModel === 'Pimentón (Alta Tensión)') {
+    return `[🔥 Pimentón]: ¡Peligro inminente! Ante "${userText}", la tensión se dispara y un giro inesperado altera por completo la escena.`;
+  } else if (userData.currentModel === 'Enebro Storyworld') {
+    return `[💜 Enebro]: Profundizando en los matices narrativos de tu elección ("${userText}"), los personajes observan cada uno de tus pasos con cautela.`;
+  } else {
+    return `[🪼 Vanilla V3]: Respondiendo fluidamente a tu acción. Las consecuencias de "${userText}" comienzan a manifestarse en el mundo.`;
+  }
+}
+
+// ==========================================
+// MODALES Y HERRAMIENTAS INMERSIVAS
+// ==========================================
+function openTutorialModal() { document.getElementById("tutorialModal").style.display = "flex"; }
+function closeTutorialModal() { document.getElementById("tutorialModal").style.display = "none"; }
+
+function openUnifiedCreation() { document.getElementById("creationUnifiedModal").style.display = "flex"; }
+function closeUnifiedCreation() { document.getElementById("creationUnifiedModal").style.display = "none"; }
+
+function openJellyfishModelsModal() { document.getElementById("jellyfishModelsModal").style.display = "flex"; }
+function closeJellyfishModelsModal() { document.getElementById("jellyfishModelsModal").style.display = "none"; }
+
+function selectModel(modelName) {
+  userData.currentModel = modelName;
+  closeJellyfishModelsModal();
+  alert(`✨ Modelo cambiado exitosamente a: ${modelName}`);
+}
+
+function openMemoryModal() {
+  document.getElementById("memoryTextInput").value = userData.memoryText;
+  updateMemoryCount();
+  document.getElementById("memoryModal").style.display = "flex";
+}
+function closeMemoryModal() { document.getElementById("memoryModal").style.display = "none"; }
+
+function updateMemoryCount() {
+  const val = document.getElementById("memoryTextInput").value;
+  document.getElementById("memCharCount").textContent = `${val.length} / 1200 caracteres`;
+}
+
+function saveMemoryData() {
+  userData.memoryText = document.getElementById("memoryTextInput").value;
+  closeMemoryModal();
+  alert("🧠 Memoria de la partida guardada y sincronizada con la IA.");
+}
+
+function openMarketModal() { document.getElementById("marketModal").style.display = "flex"; }
+function closeMarketModal() { document.getElementById("marketModal").style.display = "none"; }
+
+function openShopModal() { document.getElementById("shopModal").style.display = "flex"; }
+function closeShopModal() { document.getElementById("shopModal").style.display = "none"; }
+
+function openVerifyLinkModal() { document.getElementById("verifyLinkModal").style.display = "flex"; }
+function closeVerifyLinkModal() { document.getElementById("verifyLinkModal").style.display = "none"; }
+
+function openEditProfileModal() {
+  document.getElementById("editNameInput").value = userData.name;
+  document.getElementById("editAvatarInput").value = userData.avatar;
+  document.getElementById("editDescInput").value = userData.desc;
+  document.getElementById("editProfileModal").style.display = "flex";
+}
+function closeEditProfileModal() { document.getElementById("editProfileModal").style.display = "none"; }
+
+function saveProfileChanges() {
+  userData.name = document.getElementById("editNameInput").value || userData.name;
+  userData.avatar = document.getElementById("editAvatarInput").value || userData.avatar;
+  userData.desc = document.getElementById("editDescInput").value || userData.desc;
+  closeEditProfileModal();
+  updateUI();
+  alert("✨ Perfil actualizado correctamente.");
+}
+
+// ==========================================
+// VERIFICACIÓN AUTOMÁTICA DE VIDEOS Y PAGOS
+// ==========================================
+function submitVideoLink() {
+  const link = document.getElementById("videoLinkInput").value.trim();
+  if (!link) {
+    alert("Por favor ingresa un enlace válido.");
+    return;
+  }
+  
+  if (link.includes("tiktok.com") || link.includes("instagram.com") || link.includes("youtube.com") || link.includes("youtu.be")) {
+    userData.turns += 50;
+    userData.isVIP = true;
+    updateUI();
+    closeVerifyLinkModal();
+    alert("¡Video verificado con éxito! 🎉 +50 turnos añadidos y estatus Creadora VIP activado.");
+    document.getElementById("videoLinkInput").value = "";
+  } else {
+    alert("El enlace no pertenece a una red social compatible (TikTok, Instagram o YouTube).");
+  }
 }
 
 function watchAdReward() {
-  alert("🪼 ¡Anuncio completado! +15 turnos añadidos.");
-  turns += 15;
-  localStorage.setItem("simulo_turns", turns);
-  refreshUserStats();
-  closeShopModal();
+  alert("📺 Cargando anuncio corto patrocinado...");
+  setTimeout(() => {
+    userData.turns += 15;
+    updateUI();
+    alert("¡Recompensa reclamada! +15 turnos añadidos a tu cuenta.");
+  }, 1000);
 }
 
-function renderGameHistory() {
-  const historyBox = document.getElementById("historyList");
-  if (historyBox) {
-    if (userPartidas.length === 0) {
-      historyBox.innerHTML = `<p style="font-size:0.85rem; color:var(--texto-muted); text-align:center;">Aún no hay partidas guardadas.</p>`;
-      return;
-    }
-    historyBox.innerHTML = userPartidas.map(p => `
-      <div class="char-item-card" style="justify-content: space-between; margin-bottom: 10px; cursor:pointer;" onclick="openWorldDetail('${p.worldKey}')">
-        <div>
-          <h5>${p.title}</h5>
-          <p style="font-size:0.75rem; color:var(--texto-muted);">Turno ${p.turnos} • ${p.date}</p>
-        </div>
-        <button class="action-icon-btn delete" onclick="event.stopPropagation(); deletePartida(${p.id})">🗑️ Borrar</button>
+function submitCommunityIdea() {
+  const input = document.getElementById("newIdeaInput");
+  const val = input.value.trim();
+  if (!val) return;
+  
+  communityIdeas.unshift({ text: val, votes: 1 });
+  input.value = "";
+  renderCommunityIdeas();
+  alert("💡 ¡Idea enviada al buzón de la comunidad con éxito!");
+}
+
+function renderCommunityIdeas() {
+  const container = document.getElementById("ideasCommunityList");
+  if (!container) return;
+  
+  container.innerHTML = "";
+  communityIdeas.forEach((item, idx) => {
+    container.innerHTML += `
+      <div style="background:var(--bg-app); padding:10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; font-size:0.78rem;">
+        <span>${item.text}</span>
+        <button class="creator-badge-btn" onclick="voteIdea(${idx})" style="padding:4px 8px; font-size:0.7rem;">👍 ${item.votes}</button>
       </div>
-    `).join("");
+    `;
+  });
+}
+
+function voteIdea(idx) {
+  communityIdeas[idx].votes++;
+  renderCommunityIdeas();
+}
+
+function toggleAdultMode() {
+  userData.adultMode = !userData.adultMode;
+  if (userData.adultMode) {
+    alert("🌙 [Modo Creativo Sin Censura activado]: Los mundos permiten narrativas maduras y de alta libertad.");
+    document.getElementById("secretDotBtn").style.color = "var(--rosa-brillante)";
+  } else {
+    alert("☀️ [Modo Estándar activado].");
+    document.getElementById("secretDotBtn").style.color = "var(--texto-muted)";
   }
-        }
-    
+  }
