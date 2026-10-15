@@ -25,7 +25,6 @@ body {
   padding-bottom: 70px;
 }
 
-/* HEADER */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -65,7 +64,6 @@ body {
   cursor: pointer;
 }
 
-/* CONTENEDOR Y VISTAS */
 .main-container {
   max-width: 900px;
   margin: 16px auto;
@@ -80,7 +78,6 @@ body {
   display: block;
 }
 
-/* SPOTLIGHT HERO */
 .spotlight-card {
   background: linear-gradient(135deg, #7D3C98 0%, #A569BD 100%);
   color: #fff;
@@ -110,7 +107,6 @@ body {
   opacity: 0.9;
 }
 
-/* CHIPS DE GÉNERO */
 .genre-chips {
   display: flex;
   gap: 8px;
@@ -133,7 +129,6 @@ body {
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s;
 }
 
 .chip.active {
@@ -142,7 +137,6 @@ body {
   border-color: var(--morado-oscuro);
 }
 
-/* MUNDOS GRID */
 .section-heading {
   font-size: 1.1rem;
   color: var(--morado-oscuro);
@@ -163,11 +157,6 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   border: 1px solid #F0F0F0;
   cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.world-card:hover {
-  transform: translateY(-3px);
 }
 
 .world-cover {
@@ -184,7 +173,6 @@ body {
   font-size: 0.68rem;
   padding: 3px 8px;
   border-radius: 8px;
-  backdrop-filter: blur(4px);
   font-weight: 700;
 }
 
@@ -195,14 +183,12 @@ body {
 .world-info h4 {
   font-size: 0.95rem;
   margin-bottom: 4px;
-  color: var(--texto-principal);
 }
 
 .world-info p {
   font-size: 0.76rem;
   color: var(--texto-muted);
   margin-bottom: 10px;
-  line-height: 1.3;
 }
 
 .btn-play {
@@ -217,7 +203,6 @@ body {
   cursor: pointer;
 }
 
-/* VISTA DETALLE */
 .btn-return {
   background: transparent;
   border: none;
@@ -251,7 +236,6 @@ body {
 
 .world-description {
   font-size: 0.85rem;
-  color: var(--texto-principal);
   line-height: 1.4;
   margin-bottom: 14px;
 }
@@ -282,7 +266,6 @@ body {
   background-position: center;
 }
 
-/* VISTA PERFIL */
 .profile-main-card {
   background: white;
   padding: 20px;
@@ -333,7 +316,6 @@ body {
   color: var(--texto-muted);
 }
 
-/* CHAT / JUEGO */
 .game-header-bar {
   display: flex;
   justify-content: space-between;
@@ -416,7 +398,6 @@ body {
   text-align: center;
   cursor: pointer;
   min-width: 65px;
-  color: var(--texto-principal);
 }
 
 .app-icon-btn span {
@@ -448,7 +429,6 @@ body {
   cursor: pointer;
 }
 
-/* MODALES Y EFECTO CARTA / PAPEL MÁGICO 🎁 */
 .modal-overlay {
   display: none;
   position: fixed;
@@ -461,7 +441,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 16px;
-  transition: opacity 0.6s ease;
 }
 
 .modal-box {
@@ -471,15 +450,6 @@ body {
   width: 100%;
   max-width: 400px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-  transform-origin: center center;
-  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.4s ease;
-}
-
-/* Animación de apertura de carta / papel */
-.paper-opening-anim {
-  transform: scale(22) rotate(5deg);
-  opacity: 0;
-  pointer-events: none;
 }
 
 .modal-input-field {
@@ -497,10 +467,11 @@ body {
   background: var(--morado-principal);
   color: white;
   border: none;
-  padding: 12px;
+  padding: 14px;
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
+  font-size: 0.95rem;
 }
 
 .btn-cancel-modal {
@@ -513,7 +484,6 @@ body {
   margin-top: 6px;
 }
 
-/* NAVEGACIÓN INFERIOR */
 .bottom-tabbar {
   position: fixed;
   bottom: 0;
@@ -554,4 +524,4 @@ body {
   font-size: 1.2rem;
   box-shadow: 0 4px 10px rgba(142, 68, 173, 0.4);
   }
-    
+  
