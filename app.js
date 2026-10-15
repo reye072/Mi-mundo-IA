@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
   updateUI();
   renderCommunityIdeas();
   
-  // Evento botón enviar chat
   const sendBtn = document.getElementById("sendBtn");
   if (sendBtn) {
     sendBtn.addEventListener("click", sendMessage);
@@ -134,17 +133,29 @@ function updateUI() {
 }
 
 // ==========================================
-// REGALO DE BIENVENIDA (CORREGIDO)
+// EFECTO MÁGICO DE APERTURA DE PAPEL (REGALO)
 // ==========================================
 function openGiftAndEnter() {
-  const giftModal = document.getElementById("giftModal");
-  if (giftModal) {
-    giftModal.style.display = "none";
-  }
+  const modal = document.getElementById("giftModal");
+  const modalBox = modal.querySelector(".modal-box");
+  
+  // Activa la animación de la carta desplegándose
+  modalBox.classList.add("paper-opening-anim");
+  modal.style.background = "rgba(107, 33, 168, 0)";
+
+  setTimeout(() => {
+    modal.style.display = "none";
+    modalBox.classList.remove("paper-opening-anim");
+    modal.style.background = "rgba(80, 20, 110, 0.85)";
+  }, 600);
+
   userData.turns += 25;
   updateUI();
   switchTab('explore');
-  alert("🎁 ¡Has abierto tu regalo de bienvenida! Se han acreditado +25 turnos extra a tu cuenta.");
+  
+  setTimeout(() => {
+    alert("🎁 ¡La carta mágica se ha abierto! Has recibido +25 turnos extra en SimulO.");
+  }, 700);
 }
 
 // ==========================================
@@ -200,7 +211,6 @@ function openWorldDetail(worldId) {
   document.getElementById("detailDesc").textContent = activeWorld.desc;
   document.getElementById("detailBanner").style.backgroundImage = `url('${activeWorld.cover}')`;
   
-  // Renderizar personajes
   const charContainer = document.getElementById("charactersList");
   charContainer.innerHTML = "";
   activeWorld.characters.forEach(c => {
@@ -247,13 +257,8 @@ function renderWorldPartidas() {
 // ==========================================
 // CONFIGURACIÓN Y INICIO DE PARTIDA
 // ==========================================
-function openSetupModal() {
-  document.getElementById("setupModal").style.display = "flex";
-}
-
-function closeSetupModal() {
-  document.getElementById("setupModal").style.display = "none";
-}
+function openSetupModal() { document.getElementById("setupModal").style.display = "flex"; }
+function closeSetupModal() { document.getElementById("setupModal").style.display = "none"; }
 
 function confirmStartSimulation() {
   const edad = document.getElementById("setupEdad").value || "18";
@@ -335,7 +340,6 @@ function sendMessage() {
   
   input.value = "";
   
-  // Simulación de respuesta inmersiva de IA según el modelo activo
   setTimeout(() => {
     let aiReply = generateAIReply(text);
     appendMessageUI("ai", aiReply);
@@ -429,7 +433,7 @@ function saveProfileChanges() {
 }
 
 // ==========================================
-// VERIFICACIÓN AUTOMÁTICA DE VIDEOS Y PAGOS
+// VERIFICACIÓN DE VIDEOS Y PAGOS
 // ==========================================
 function submitVideoLink() {
   const link = document.getElementById("videoLinkInput").value.trim();
@@ -493,10 +497,11 @@ function voteIdea(idx) {
 function toggleAdultMode() {
   userData.adultMode = !userData.adultMode;
   if (userData.adultMode) {
-    alert("🌙 [Modo Creativo Sin Censura activado]: Los mundos permiten narrativas maduras y de alta libertad.");
+    alert("🌙 [Modo Creativo Sin Censura activado].");
     document.getElementById("secretDotBtn").style.color = "var(--rosa-brillante)";
   } else {
     alert("☀️ [Modo Estándar activado].");
     document.getElementById("secretDotBtn").style.color = "var(--texto-muted)";
   }
-      }
+}
+  
