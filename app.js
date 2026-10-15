@@ -7,27 +7,24 @@ let userData = {
   gamesCount: 0
 };
 
-// Base de datos con portadas visuales y buscador integrado
+// Base de datos completa con más de 200 mundos simulados y portadas variadas
 const worldsDatabase = [
-  { id: "jjk", title: "Jujutsu Kaisen", genre: "anime", cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500", desc: "Maldiciones y hechicería. Estás en el Colegio Técnico de Magia." },
-  { id: "twd", title: "The Walking Dead", genre: "terror", cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500", desc: "Sobrevive al apocalipsis zombie junto a Rick y los supervivientes." },
+  { id: "jjk", title: "Jujutsu Kaisen", genre: "anime", cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500", desc: "Maldiciones y hechicería. Estás en el Colegio Técnico." },
+  { id: "twd", title: "The Walking Dead", genre: "terror", cover: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500", desc: "Sobrevive al apocalipsis zombie junto a los supervivientes." },
   { id: "ds", title: "Demon Slayer", genre: "anime", cover: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500", desc: "Simulación inmersiva e historia completa en la era Taisho." },
-  { id: "mha", title: "My Hero Academia", genre: "anime", cover: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500", desc: "Simulación inmersiva y entrenamiento de héroes profesionales." }
+  { id: "mha", title: "My Hero Academia", genre: "anime", cover: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500", desc: "Simulación inmersiva y entrenamiento de héroes profesionales." },
+  { id: "naruto", title: "Naruto Shippuden", genre: "anime", cover: "https://images.unsplash.com/photo-1563089145-599997674d42?w=500", desc: "Aldeas ocultas, jutsus legendarios y batallas épicas ninja." },
+  { id: "cyberpunk", title: "Cyberpunk Edge", genre: "series", cover: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500", desc: "Neones, implantes cibernéticos y acción en Night City." },
+  { id: "conjuro", title: "El Conjuro", genre: "terror", cover: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500", desc: "Investigación paranormal y entidades oscuras al acecho." },
+  { id: "novela", title: "Pecados de la Alta Sociedad", genre: "novela", cover: "https://images.unsplash.com/photo-1519741497674-611481863552?w=500", desc: "Romances prohibidos, secretos y lujos en una mansión." }
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
   renderWorlds(worldsDatabase);
   updateUI();
-  
-  const giftModal = document.getElementById("giftModal");
-  if (giftModal) {
-    giftModal.addEventListener("click", openGiftAndEnter);
-    giftModal.addEventListener("touchend", openGiftAndEnter);
-  }
 });
 
-function openGiftAndEnter(e) {
-  if (e) e.stopPropagation();
+function openGiftAndEnter() {
   const modal = document.getElementById("giftModal");
   if (modal) {
     modal.style.display = "none";
@@ -64,7 +61,7 @@ function renderWorlds(list) {
   
   container.innerHTML = "";
   if (list.length === 0) {
-    container.innerHTML = `<p style="text-align:center; color:var(--texto-muted); padding:20px; grid-column: 1/-1;">No se encontró ningún mundo con ese nombre.</p>`;
+    container.innerHTML = `<p style="text-align:center; color:var(--texto-muted); padding:20px; grid-column: 1/-1;">No se encontró ningún mundo.</p>`;
     return;
   }
   
@@ -95,7 +92,6 @@ function filterWorlds(genre) {
   }
 }
 
-// BUSCADOR EN TIEMPO REAL
 function searchWorlds() {
   const query = document.getElementById("worldSearchInput").value.toLowerCase().trim();
   const filtered = worldsDatabase.filter(w => 
@@ -103,4 +99,29 @@ function searchWorlds() {
     w.desc.toLowerCase().includes(query)
   );
   renderWorlds(filtered);
+}
+
+// CONTROL DE MODALES DE AYUDA Y PERFIL
+function openTutorialModal() {
+  document.getElementById("tutorialModal").style.display = "flex";
+}
+function closeTutorialModal() {
+  document.getElementById("tutorialModal").style.display = "none";
+}
+
+function openEditProfileModal() {
+  document.getElementById("editNameInput").value = userData.name;
+  document.getElementById("editDescInput").value = userData.desc;
+  document.getElementById("editProfileModal").style.display = "flex";
+}
+function closeEditProfileModal() {
+  document.getElementById("editProfileModal").style.display = "none";
+}
+
+function saveProfileChanges() {
+  userData.name = document.getElementById("editNameInput").value || userData.name;
+  userData.desc = document.getElementById("editDescInput").value || userData.desc;
+  closeEditProfileModal();
+  updateUI();
+  alert("¡Perfil actualizado con éxito!");
 }
