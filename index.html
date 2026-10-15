@@ -9,12 +9,12 @@
 </head>
 <body>
 
-  <!-- REGALO DE BIENVENIDA 🎁 -->
-  <div class="modal-overlay" id="giftModal" style="display: flex; background: rgba(107, 33, 168, 0.45);">
-    <div class="modal-box" style="text-align: center; padding: 32px;">
-      <span style="font-size: 4rem; display: block; margin-bottom: 12px; animation: bounce 1.5s infinite;">🎁</span>
+  <!-- REGALO DE BIENVENIDA MÁGICO 🎁 -->
+  <div class="modal-overlay" id="giftModal" style="display: flex;">
+    <div class="modal-box gift-paper-box" style="text-align: center; padding: 32px;">
+      <span class="gift-icon-anim" style="font-size: 4rem; display: block; margin-bottom: 12px;">🎁</span>
       <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">¡Tienes un regalo especial!</h3>
-      <p style="font-size: 0.88rem; color: var(--texto-muted); margin-bottom: 22px;">Toca el regalo para abrir tu experiencia interactiva en SimulO.</p>
+      <p style="font-size: 0.88rem; color: var(--texto-muted); margin-bottom: 22px;">Toca el regalo para abrir la carta mágica y entrar a SimulO.</p>
       <button class="btn-main-action" onclick="openGiftAndEnter()">Abrir Regalo ✨</button>
     </div>
   </div>
@@ -71,7 +71,6 @@
         <button class="btn-main-action" onclick="openSetupModal()">▶ Jugar / Crear Partida</button>
       </div>
 
-      <!-- TUS PARTIDAS DE ESTE MUNDO -->
       <h3 class="section-heading" style="margin-top: 22px;">TUS PARTIDAS EN ESTE MUNDO</h3>
       <div id="worldPartidasList" style="margin-bottom: 20px;"></div>
 
@@ -98,7 +97,6 @@
           <div class="stat-item"><span class="stat-number" id="gamesCount">0</span><span class="stat-text">Partidas</span></div>
         </div>
 
-        <!-- Panel de Géneros Más Jugados -->
         <div style="background: var(--bg-app); padding: 14px; border-radius: 16px; margin-bottom: 16px; text-align: left;">
           <h5 style="font-size: 0.85rem; color: var(--morado-oscuro); margin-bottom: 8px;">✨ Mis Géneros Más Jugados</h5>
           <div style="font-size: 0.78rem; display: flex; flex-direction: column; gap: 6px;">
@@ -111,13 +109,11 @@
         <button class="creator-badge-btn" onclick="openEditProfileModal()" style="width: 100%; margin-bottom: 10px;">✏️ Editar mi Perfil</button>
         <button class="creator-badge-btn" onclick="openVerifyLinkModal()" style="width: 100%; margin-bottom: 10px; background: #E0E7FF; color: #3730A3;">📱 Canjear Puntos por Video Tik Tok / Redes (+50)</button>
 
-        <!-- Punto Secreto Exclusivo -->
         <div style="margin: 10px 0; text-align: center;">
           <span id="secretDotBtn" onclick="toggleAdultMode()" style="font-size: 2rem; cursor: pointer; color: var(--texto-muted); user-select: none;">•</span>
         </div>
       </div>
 
-      <!-- Buzón de Sugerencias de la Comunidad -->
       <div class="profile-main-card" style="margin-top: 16px; text-align: left;">
         <h4 style="color: var(--morado-oscuro); margin-bottom: 6px;">💬 Buzón de Sugerencias y Reseñas</h4>
         <p style="font-size: 0.78rem; color: var(--texto-muted); margin-bottom: 12px;">Escribe tus ideas para la plataforma. ¡Las más votadas se programarán!</p>
@@ -141,7 +137,6 @@
 
       <div class="chat-viewport" id="chatBox"></div>
 
-      <!-- BARRA DE APPS INMERSIVAS DEL JUEGO -->
       <div class="in-game-apps-bar">
         <button class="app-icon-btn" onclick="openGameApp('whatsapp')">💬<br><span>WhatsApp</span></button>
         <button class="app-icon-btn" onclick="openGameApp('wallet')">💳<br><span>Billetera</span></button>
@@ -165,14 +160,12 @@
       <h3 style="color: var(--morado-oscuro); text-align: center; margin-bottom: 4px;">🛍️ Tienda Oficial SimulO</h3>
       <p style="font-size: 0.78rem; text-align: center; color: var(--texto-muted); margin-bottom: 16px;">Apoya la plataforma y consigue beneficios exclusivos.</p>
       
-      <!-- Opción 1: Gratis -->
       <div style="background: var(--bg-app); padding: 12px; border-radius: 16px; margin-bottom: 12px; text-align: center;">
         <h5 style="margin-bottom: 4px;">📺 Recompensa Gratuita</h5>
         <p style="font-size: 0.75rem; color: var(--texto-muted); margin-bottom: 8px;">Mira un anuncio corto para reclamar +15 turnos.</p>
         <button class="creator-badge-btn" onclick="watchAdReward()" style="width: 100%;">Reclamar Gratis (+15 Turnos)</button>
       </div>
 
-      <!-- Opción 2: Paquete de Turnos -->
       <div style="background: linear-gradient(135deg, #FFE5EC 0%, #F3E8FF 100%); padding: 14px; border-radius: 16px; margin-bottom: 12px;">
         <h5 style="color: var(--morado-oscuro); margin-bottom: 4px;">💎 Paquete de Turnos Pro (+300)</h5>
         <p style="font-size: 0.75rem; color: var(--texto-muted); margin-bottom: 10px;">Ideal para historias largas sin interrupciones.</p>
@@ -181,7 +174,6 @@
         </a>
       </div>
 
-      <!-- Opción 3: Pase VIP Mensual -->
       <div style="background: var(--morado-claro); padding: 14px; border-radius: 16px; margin-bottom: 12px;">
         <h5 style="color: var(--morado-oscuro); margin-bottom: 4px;">✨ Pase VIP Mensual (Turnos Ilimitados)</h5>
         <p style="font-size: 0.75rem; color: var(--texto-muted); margin-bottom: 10px;">Acceso ilimitado y prioridad en la comunidad por 1 mes.</p>
@@ -318,4 +310,6 @@
   <!-- MODAL VALIDACIÓN DE VIDEO PARA REDES -->
   <div class="modal-overlay" id="verifyLinkModal">
     <div class="modal-box" style="text-align: left;">
-      <h3 style
+      <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">📱 Puntos por Videos Tik Tok / Redes</h3>
+      <p style="font-size: 0.78rem; color: var(--texto-muted); margin-bottom: 12px;">Pega el enlace de tu video promocional para ganar +50 puntos y activar tu estatus Creadora VIP:</p>
+      <input type="text" id="videoLinkInput" placeholder="https://www.tiktok.com/@tu_usuario/video
