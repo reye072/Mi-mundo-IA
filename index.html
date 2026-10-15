@@ -15,7 +15,8 @@
       <span class="logo-icon">🪼</span>
       <h1>SimulO</h1>
     </div>
-    <div class="header-tools">
+    <div class="header-tools" style="display: flex; gap: 8px;">
+      <button class="creator-badge-btn" onclick="openTutorialModal()">❓ Ayuda</button>
       <button class="creator-badge-btn" id="creadoraBtn">✨ Creadora</button>
     </div>
   </header>
@@ -27,22 +28,20 @@
     <section id="view-explore" class="app-view active">
       <div class="spotlight-card">
         <span class="spotlight-tag">🌟 UNIVERSO SIMULO</span>
-        <h2>Más de 200 Mundos y Narrativas Extensas</h2>
-        <p>Explora novelas, anime, terror y leyendas con historias detalladas y sin censura.</p>
+        <h2>200+ Mundos e Historias Inmersivas</h2>
+        <p>Anime, terror, series y novelas con narrativas profundas y sin censura.</p>
       </div>
 
       <div class="genre-chips">
         <button class="chip active" onclick="filterWorlds('all')">Todos</button>
-        <button class="chip" onclick="filterWorlds('terror')">Terror & Gore</button>
         <button class="chip" onclick="filterWorlds('anime')">Anime</button>
-        <button class="chip" onclick="filterWorlds('leyendas')">Leyendas</button>
+        <button class="chip" onclick="filterWorlds('terror')">Terror & Gore</button>
+        <button class="chip" onclick="filterWorlds('series')">Series</button>
         <button class="chip" onclick="filterWorlds('novela')">Novelas</button>
       </div>
 
       <h3 class="section-heading">Catálogo de Mundos</h3>
-      <div class="worlds-custom-grid" id="worldsGridContainer">
-        <!-- Se llena dinámicamente -->
-      </div>
+      <div class="worlds-custom-grid" id="worldsGridContainer"></div>
     </section>
 
     <!-- VISTA DETALLE DEL MUNDO -->
@@ -53,11 +52,23 @@
         <h2 id="detailTitle">Título del Mundo</h2>
         <span class="world-author">Creado por Oficial SimulO</span>
         <p id="detailDesc" class="world-description"></p>
-        <button class="btn-main-action" onclick="startNewSimulation()">▶ Iniciar Partida (50 Turnos)</button>
+        <button class="btn-main-action" onclick="openSetupModal()">▶ Jugar / Crear Partida</button>
       </div>
 
-      <h3 class="section-heading">Elenco de Bots y Personajes</h3>
+      <!-- Apps del Mundo -->
+      <h3 class="section-heading" style="margin-top: 20px;">PUEDES USAR ESTAS APPS</h3>
+      <div class="apps-list-container">
+        <div class="app-row-card"><span class="app-row-icon">🎯</span><div><h5>Entrada principal</h5><p>Escribe lo que quieras hacer — el mundo reacciona.</p></div></div>
+        <div class="app-row-card"><span class="app-row-icon">📜</span><div><h5>Historia</h5><p>La historia que se despliega, contada como cartas que van pasando.</p></div></div>
+        <div class="app-row-card"><span class="app-row-icon">💬</span><div><h5>Chats</h5><p>Habla en privado o en grupo con cualquier personaje.</p></div></div>
+        <div class="app-row-card"><span class="app-row-icon">⏰</span><div><h5>Tiempo</h5><p>Un reloj del mundo con el que puedes adelantar el tiempo.</p></div></div>
+      </div>
+
+      <h3 class="section-heading" style="margin-top: 20px;">Personajes y Bots</h3>
       <div class="char-scroll-list" id="charactersList"></div>
+
+      <h3 class="section-heading" style="margin-top: 20px;">TUS PARTIDAS</h3>
+      <div id="worldPartidasList" style="margin-bottom: 30px;"></div>
     </section>
 
     <!-- VISTA HISTORIAL -->
@@ -69,9 +80,11 @@
     <!-- VISTA PERFIL -->
     <section id="view-profile" class="app-view">
       <div class="profile-main-card">
-        <div class="profile-avatar-circle">🪼</div>
-        <h3>Jugadora SimulO</h3>
+        <div class="profile-avatar-circle" id="profileAvatarDisplay" style="background-image: url('https://picsum.photos/100/100?random=99'); background-size: cover;"></div>
+        <h3 id="profileNameDisplay">Jugadora SimulO</h3>
+        <p id="profileDescDisplay" style="font-size:0.82rem; color:var(--texto-muted); margin-top:4px;">Sin descripción aún.</p>
         <span class="profile-status" id="creatorStatusBadge">Cuenta Gratuita</span>
+        
         <div class="profile-stats-grid">
           <div class="stat-item">
             <span class="stat-number" id="turnsCount">50</span>
@@ -82,10 +95,12 @@
             <span class="stat-text">Partidas</span>
           </div>
         </div>
+
+        <button class="creator-badge-btn" onclick="openEditProfileModal()" style="margin-bottom: 15px; width: 100%;">✏️ Editar mi Perfil</button>
         
-        <!-- Opción secreta camuflada como un punto grande -->
-        <div style="margin: 15px 0; text-align: center;">
-          <span id="secretDotBtn" onclick="toggleAdultMode()" style="font-size: 2rem; cursor: pointer; color: var(--texto-muted); user-select: none;" title="">•</span>
+        <!-- Punto secreto exclusivo para ti -->
+        <div style="margin: 10px 0; text-align: center;">
+          <span id="secretDotBtn" onclick="toggleAdultMode()" style="font-size: 2rem; cursor: pointer; color: var(--texto-muted); user-select: none;">•</span>
         </div>
 
         <button class="btn-main-action" onclick="openShopModal()">🪼 Recargar Turnos (+15)</button>
@@ -98,7 +113,9 @@
         <button class="btn-return" onclick="switchTab('explore')">← Cambiar de Mundo</button>
         <span class="game-turns-pill" id="gameTurnsCounter">Turnos: 50</span>
       </div>
+
       <div class="chat-viewport" id="chatBox"></div>
+
       <div class="chat-composer">
         <input type="text" id="userInput" placeholder="Usa *acción* o &quot;diálogo&quot;...">
         <button id="sendBtn" class="send-plane-btn">➤</button>
@@ -106,6 +123,86 @@
     </section>
 
   </main>
+
+  <!-- MODAL TUTORIAL -->
+  <div class="modal-overlay" id="tutorialModal" style="display: flex;">
+    <div class="modal-box" style="max-height: 85vh; overflow-y: auto; text-align: left;">
+      <h3 style="color: var(--morado-oscuro); margin-bottom: 6px; text-align: center;">✨ ¡Bienvenida a SimulO!</h3>
+      <p style="font-size: 0.8rem; text-align: center; margin-bottom: 16px; color: var(--texto-muted);">Guía detallada para dominar tu universo de ficción.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.85rem; line-height: 1.5;">
+        <div style="background: var(--bg-app); padding: 10px; border-radius: 12px;">
+          <b>🏠 1. Explorar Mundos:</b> Elige entre 200+ mundos de anime, terror y series.
+        </div>
+        <div style="background: var(--bg-app); padding: 10px; border-radius: 12px;">
+          <b>⚙️ 2. Crea tu personaje:</b> Configura tu edad, nombre, profesión, arma y selecciona dinámicas especiales como <b>BL</b> o <b>Lesbianas</b>.
+        </div>
+        <div style="background: var(--bg-app); padding: 10px; border-radius: 12px;">
+          <b>💬 3. Chat inmersivo:</b> Usa <code>*acción*</code> para movimientos y <code>"diálogo"</code> para hablar. Tus mensajes van a la derecha y los del bot a la izquierda.
+        </div>
+        <div style="background: var(--bg-app); padding: 10px; border-radius: 12px;">
+          <b>✏️ 4. Edición:</b> Usa los botones en cada mensaje para editar o borrar cuando gustes.
+        </div>
+        <div style="background: var(--bg-app); padding: 10px; border-radius: 12px;">
+          <b>👤 5. Perfil y Modo Secreto:</b> Modifica tu avatar y datos en Perfil. El punto secreto está protegido con tu clave personal.
+        </div>
+      </div>
+
+      <button class="btn-main-action" onclick="closeTutorialModal()" style="margin-top: 16px;">¡Entendido, a jugar! 🚀</button>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIGURACIÓN DE PARTIDA -->
+  <div class="modal-overlay" id="setupModal">
+    <div class="modal-box" style="max-height: 85vh; overflow-y: auto; text-align: left;">
+      <h3 style="margin-bottom: 4px; color: var(--morado-oscuro);">✨ Crea tu personaje y tu mundo</h3>
+      <p style="font-size: 0.78rem; margin-bottom: 16px;">Personaliza tu historia antes de empezar.</p>
+      
+      <label style="font-size: 0.8rem; font-weight: 700;">¿Cuál es tu edad?</label>
+      <input type="text" id="setupEdad" placeholder="Ej. 18" class="modal-input-field">
+
+      <label style="font-size: 0.8rem; font-weight: 700;">¿Cómo te llamas?</label>
+      <input type="text" id="setupNombre" placeholder="Tu nombre" class="modal-input-field">
+
+      <label style="font-size: 0.8rem; font-weight: 700;">Describe tu personaje <span style="font-weight:normal; color:var(--texto-muted);">(opcional)</span></label>
+      <textarea id="setupDesc" placeholder="Personalidad, apariencia..." class="modal-input-field" rows="2"></textarea>
+
+      <label style="font-size: 0.8rem; font-weight: 700;">¿Cuál era tu profesión?</label>
+      <input type="text" id="setupProf" placeholder="Ej. Estudiante, cazador..." class="modal-input-field">
+
+      <label style="font-size: 0.8rem; font-weight: 700;">¿Con qué arma comienzas?</label>
+      <input type="text" id="setupArma" placeholder="Ej. Katana, ballesta..." class="modal-input-field">
+
+      <label style="font-size: 0.8rem; font-weight: 700;">Dinámica relacional (Opcional)</label>
+      <select id="setupRelacion" class="modal-input-field">
+        <option value="normal">Estándar / Libre</option>
+        <option value="bl">BL (Chico x Chico)</option>
+        <option value="lesbian">Lesbianas (Chica x Chica)</option>
+        <option value="romance">Romance General</option>
+      </select>
+
+      <label style="font-size: 0.8rem; font-weight: 700;">Nombre de la partida</label>
+      <input type="text" id="setupPartidaName" class="modal-input-field" value="Partida Principal">
+
+      <button class="btn-main-action" onclick="confirmStartSimulation()" style="margin-top: 10px;">▶ Jugar ahora</button>
+      <button class="btn-cancel-modal" onclick="closeSetupModal()" style="width: 100%;">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR PERFIL -->
+  <div class="modal-overlay" id="editProfileModal">
+    <div class="modal-box" style="text-align: left;">
+      <h3>Editar Perfil</h3>
+      <label style="font-size: 0.8rem; font-weight: 700;">Tu Nombre</label>
+      <input type="text" id="editNameInput" class="modal-input-field">
+      <label style="font-size: 0.8rem; font-weight: 700;">URL de tu Avatar / Foto</label>
+      <input type="text" id="editAvatarInput" class="modal-input-field">
+      <label style="font-size: 0.8rem; font-weight: 700;">Descripción corta</label>
+      <textarea id="editDescInput" class="modal-input-field" rows="2"></textarea>
+      <button class="btn-main-action" onclick="saveProfileChanges()" style="margin-top: 10px;">Guardar Cambios</button>
+      <button class="btn-cancel-modal" onclick="closeEditProfileModal()" style="width: 100%;">Cancelar</button>
+    </div>
+  </div>
 
   <!-- Modal Tienda / Zaps -->
   <div class="modal-overlay" id="shopModal">
@@ -117,7 +214,7 @@
     </div>
   </div>
 
-  <!-- Barra de Navegación Estilo App Inferior -->
+  <!-- Barra de Navegación Inferior -->
   <nav class="bottom-tabbar">
     <button class="tab-btn active" onclick="switchTab('explore')">
       <span class="tab-icon">🏠</span>
@@ -139,3 +236,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+
