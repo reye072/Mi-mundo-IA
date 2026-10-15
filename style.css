@@ -2,9 +2,6 @@
   --morado-oscuro: #5B2C6F;
   --morado-principal: #8E44AD;
   --morado-claro: #F3E8FF;
-  --morado-pastel: #E8DAEF;
-  --rosa-brillante: #FF69B4;
-  --rosa-suave: #FFE5EC;
   --bg-app: #FAFAFC;
   --card-bg: #FFFFFF;
   --texto-principal: #2C3E50;
@@ -41,10 +38,6 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.logo-icon {
-  font-size: 1.4rem;
 }
 
 .app-header h1 {
@@ -84,7 +77,6 @@ body {
   padding: 22px;
   border-radius: var(--border-radius);
   margin-bottom: 16px;
-  box-shadow: 0 10px 20px rgba(142, 68, 173, 0.2);
 }
 
 .spotlight-tag {
@@ -97,26 +89,12 @@ body {
   margin-bottom: 6px;
 }
 
-.spotlight-card h2 {
-  font-size: 1.35rem;
-  margin-bottom: 6px;
-}
-
-.spotlight-card p {
-  font-size: 0.85rem;
-  opacity: 0.9;
-}
-
 .genre-chips {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 8px;
   margin-bottom: 16px;
-}
-
-.genre-chips::-webkit-scrollbar {
-  display: none;
 }
 
 .chip {
@@ -163,7 +141,6 @@ body {
   height: 130px;
   background-size: cover;
   background-position: center;
-  position: relative;
   padding: 10px;
 }
 
@@ -180,17 +157,6 @@ body {
   padding: 14px;
 }
 
-.world-info h4 {
-  font-size: 0.95rem;
-  margin-bottom: 4px;
-}
-
-.world-info p {
-  font-size: 0.76rem;
-  color: var(--texto-muted);
-  margin-bottom: 10px;
-}
-
 .btn-play {
   width: 100%;
   background: var(--morado-claro);
@@ -203,244 +169,20 @@ body {
   cursor: pointer;
 }
 
-.btn-return {
-  background: transparent;
-  border: none;
-  color: var(--morado-oscuro);
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-
-.world-hero-box {
-  height: 180px;
-  background-size: cover;
-  background-position: center;
-  border-radius: var(--border-radius);
-  margin-bottom: 14px;
-}
-
-.world-info-content h2 {
-  font-size: 1.3rem;
-  margin-bottom: 2px;
-  color: var(--morado-oscuro);
-}
-
-.world-author {
-  font-size: 0.75rem;
-  color: var(--texto-muted);
-  display: block;
-  margin-bottom: 8px;
-}
-
-.world-description {
-  font-size: 0.85rem;
-  line-height: 1.4;
-  margin-bottom: 14px;
-}
-
-.char-scroll-list {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-}
-
-.char-item-card {
-  background: white;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #EAEAEA;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 180px;
-}
-
-.char-mini-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-}
-
-.profile-main-card {
-  background: white;
-  padding: 20px;
-  border-radius: var(--border-radius);
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-}
-
-.profile-avatar-circle {
-  width: 75px;
-  height: 75px;
-  border-radius: 50%;
-  margin: 0 auto 10px auto;
-  border: 3px solid var(--morado-claro);
-}
-
-.profile-status {
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 700;
-  display: inline-block;
-  margin: 8px 0 14px 0;
-}
-
-.profile-stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.stat-item {
-  background: var(--bg-app);
-  padding: 10px;
-  border-radius: 12px;
-}
-
-.stat-number {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--morado-oscuro);
-  display: block;
-}
-
-.stat-text {
-  font-size: 0.72rem;
-  color: var(--texto-muted);
-}
-
-.game-header-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.action-icon-btn {
-  background: white;
-  border: 1px solid #EAEAEA;
-  padding: 6px 10px;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--morado-oscuro);
-  cursor: pointer;
-}
-
-.chat-viewport {
-  background: white;
-  height: 52vh;
-  border-radius: var(--border-radius);
-  padding: 14px;
-  overflow-y: auto;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #EAEAEA;
-}
-
-.chat-msg {
-  max-width: 82%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 0.84rem;
-  line-height: 1.4;
-}
-
-.user-bubble {
-  background: var(--morado-principal);
-  color: white;
-  align-self: flex-end;
-  border-bottom-right-radius: 2px;
-}
-
-.ai-bubble {
-  background: var(--bg-app);
-  color: var(--texto-principal);
-  align-self: flex-start;
-  border-bottom-left-radius: 2px;
-  border: 1px solid #EAEAEA;
-}
-
-.system-bubble {
-  background: var(--morado-claro);
-  color: var(--morado-oscuro);
-  align-self: center;
-  font-size: 0.75rem;
-  text-align: center;
-  border-radius: 10px;
-  width: 100%;
-}
-
-.in-game-apps-bar {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  margin-bottom: 10px;
-  padding-bottom: 4px;
-}
-
-.app-icon-btn {
-  background: white;
-  border: 1px solid #EAEAEA;
-  padding: 6px 10px;
-  border-radius: 12px;
-  font-size: 0.72rem;
-  text-align: center;
-  cursor: pointer;
-  min-width: 65px;
-}
-
-.app-icon-btn span {
-  font-size: 0.65rem;
-  color: var(--texto-muted);
-}
-
-.chat-composer {
-  display: flex;
-  gap: 8px;
-}
-
-.chat-composer input {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #DDD;
-  border-radius: 14px;
-  font-size: 0.85rem;
-  outline: none;
-}
-
-.send-plane-btn {
-  background: var(--morado-principal);
-  color: white;
-  border: none;
-  width: 45px;
-  border-radius: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
+/* MODALES CON INTERACCIÓN TOTAL */
 .modal-overlay {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: rgba(80, 20, 110, 0.85);
-  z-index: 999;
+  z-index: 9999;
   justify-content: center;
   align-items: center;
   padding: 16px;
+  cursor: pointer;
 }
 
 .modal-box {
@@ -450,6 +192,7 @@ body {
   width: 100%;
   max-width: 400px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  cursor: default;
 }
 
 .modal-input-field {
@@ -459,7 +202,6 @@ body {
   border-radius: 12px;
   margin-bottom: 12px;
   font-size: 0.85rem;
-  outline: none;
 }
 
 .btn-main-action {
@@ -472,16 +214,6 @@ body {
   font-weight: 700;
   cursor: pointer;
   font-size: 0.95rem;
-}
-
-.btn-cancel-modal {
-  background: transparent;
-  color: var(--texto-muted);
-  border: none;
-  padding: 8px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  margin-top: 6px;
 }
 
 .bottom-tabbar {
@@ -506,21 +238,4 @@ body {
   font-size: 0.7rem;
   color: var(--texto-muted);
   cursor: pointer;
-}
-
-.tab-icon {
-  font-size: 1.2rem;
-  margin-bottom: 2px;
-}
-
-.center-plus-btn {
-  background: var(--morado-principal);
-  color: white;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  box-shadow: 0 4px 10px rgba(142, 68, 173, 0.4);
 }
