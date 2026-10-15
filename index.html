@@ -10,14 +10,15 @@
 <body>
 
   <!-- REGALO DE BIENVENIDA MÁGICO 🎁 -->
-  <div class="modal-overlay" id="giftModal" style="display: flex;">
-    <div class="modal-box gift-paper-box" style="text-align: center; padding: 32px;">
-      <span class="gift-icon-anim" style="font-size: 4rem; display: block; margin-bottom: 12px;">🎁</span>
-      <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">¡Tienes un regalo especial!</h3>
-      <p style="font-size: 0.88rem; color: var(--texto-muted); margin-bottom: 22px;">Toca el regalo para abrir la carta mágica y entrar a SimulO.</p>
-      <button class="btn-main-action" onclick="openGiftAndEnter()" ontouchend="openGiftAndEnter()">Abrir Regalo ✨</button>
-    </div>
+<div class="modal-overlay" id="giftModal" style="display: flex;" onclick="openGiftAndEnter()">
+  <div class="modal-box gift-paper-box" style="text-align: center; padding: 32px;" onclick="event.stopPropagation(); openGiftAndEnter()">
+    <span class="gift-icon-anim" style="font-size: 4rem; display: block; margin-bottom: 12px;">🎁</span>
+    <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">¡Tienes un regalo especial!</h3>
+    <p style="font-size: 0.88rem; color: var(--texto-muted); margin-bottom: 22px;">Toca el regalo para abrir la carta mágica y entrar a SimulO.</p>
+    <button class="btn-main-action">Abrir Regalo ✨</button>
   </div>
+</div>
+  
 
   <!-- CABECERA PRINCIPAL -->
   <header class="app-header">
