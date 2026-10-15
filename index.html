@@ -26,6 +26,7 @@
       <h1>SimulO</h1>
     </div>
     <div class="header-tools" style="display: flex; gap: 8px;">
+      <button class="creator-badge-btn" onclick="openShopModal()">🛍️ Tienda</button>
       <button class="creator-badge-btn" onclick="openTutorialModal()">❓ Ayuda</button>
       <button class="creator-badge-btn" id="creadoraBtn">✨ Creadora</button>
     </div>
@@ -158,6 +159,41 @@
 
   </main>
 
+  <!-- MODAL TIENDA REAL CON PAGOS -->
+  <div class="modal-overlay" id="shopModal">
+    <div class="modal-box" style="text-align: left; max-height: 85vh; overflow-y: auto;">
+      <h3 style="color: var(--morado-oscuro); text-align: center; margin-bottom: 4px;">🛍️ Tienda Oficial SimulO</h3>
+      <p style="font-size: 0.78rem; text-align: center; color: var(--texto-muted); margin-bottom: 16px;">Apoya la plataforma y consigue beneficios exclusivos.</p>
+      
+      <!-- Opción 1: Gratis -->
+      <div style="background: var(--bg-app); padding: 12px; border-radius: 16px; margin-bottom: 12px; text-align: center;">
+        <h5 style="margin-bottom: 4px;">📺 Recompensa Gratuita</h5>
+        <p style="font-size: 0.75rem; color: var(--texto-muted); margin-bottom: 8px;">Mira un anuncio corto para reclamar +15 turnos.</p>
+        <button class="creator-badge-btn" onclick="watchAdReward()" style="width: 100%;">Reclamar Gratis (+15 Turnos)</button>
+      </div>
+
+      <!-- Opción 2: Paquete de Turnos -->
+      <div style="background: linear-gradient(135deg, #FFE5EC 0%, #F3E8FF 100%); padding: 14px; border-radius: 16px; margin-bottom: 12px;">
+        <h5 style="color: var(--morado-oscuro); margin-bottom: 4px;">💎 Paquete de Turnos Pro (+300)</h5>
+        <p style="font-size: 0.75rem; color: var(--texto-muted); margin-bottom: 10px;">Ideal para historias largas sin interrupciones.</p>
+        <a href="https://buy.stripe.com/tu_enlace_de_pago_real" target="_blank" style="text-decoration: none;">
+          <button class="btn-main-action" style="padding: 10px; font-size: 0.85rem;">Comprar por $2.99 USD 🚀</button>
+        </a>
+      </div>
+
+      <!-- Opción 3: Pase VIP Mensual -->
+      <div style="background: var(--morado-claro); padding: 14px; border-radius: 16px; margin-bottom: 12px;">
+        <h5 style="color: var(--morado-oscuro); margin-bottom: 4px;">✨ Pase VIP Mensual (Turnos Ilimitados)</h5>
+        <p style="font-size: 0.75rem; color: var(--texto-muted); margin-bottom: 10px;">Acceso ilimitado y prioridad en la comunidad por 1 mes.</p>
+        <a href="https://buy.stripe.com/tu_enlace_de_suscripcion_real" target="_blank" style="text-decoration: none;">
+          <button class="btn-main-action" style="background: var(--morado-pastel); color: #333; padding: 10px; font-size: 0.85rem;">Suscribirse por $7.99/mes 👑</button>
+        </a>
+      </div>
+
+      <button class="btn-cancel-modal" onclick="closeShopModal()" style="width: 100%;">Cerrar Tienda</button>
+    </div>
+  </div>
+
   <!-- MODAL TUTORIAL -->
   <div class="modal-overlay" id="tutorialModal">
     <div class="modal-box" style="max-height: 85vh; overflow-y: auto; text-align: left;">
@@ -172,19 +208,19 @@
     </div>
   </div>
 
-  <!-- MODAL CREACIÓN UNIFICADO (Medusa 🪼 y Libro 📖) -->
+  <!-- MODAL CREACIÓN UNIFICADO -->
   <div class="modal-overlay" id="creationUnifiedModal">
     <div class="modal-box" style="text-align: left;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">🪼 Centro de Creación SimulO</h3>
       <p style="font-size: 0.78rem; color: var(--texto-muted); margin-bottom: 16px;">¿Qué deseas crear hoy?</p>
       <button class="btn-main-action" onclick="closeUnifiedCreation(); openSetupModal();" style="margin-bottom: 10px;">🎮 Crear Nueva Partida</button>
-      <button class="btn-main-action" onclick="alert('✨ ¡Modo Creador de Mundos abierto! Pronto podrás publicar tus universos.'); closeUnifiedCreation();" style="background: var(--morado-pastel); margin-bottom: 10px;">🌍 Crear un Mundo Personalizado</button>
+      <button class="btn-main-action" onclick="alert('✨ ¡Modo Creador de Mundos abierto!'); closeUnifiedCreation();" style="background: var(--morado-pastel); margin-bottom: 10px;">🌍 Crear un Mundo Personalizado</button>
       <button class="btn-main-action" onclick="closeUnifiedCreation(); openMarketModal();" style="background: var(--rosa-suave);">📲 Crear/Instalar App Inmersiva</button>
       <button class="btn-cancel-modal" onclick="closeUnifiedCreation()" style="width: 100%;">Cerrar</button>
     </div>
   </div>
 
-  <!-- MODAL SELECTOR DE MODELOS CON MEDUSAS COLORIDAS 🪼 -->
+  <!-- MODAL SELECTOR DE MODELOS -->
   <div class="modal-overlay" id="jellyfishModelsModal">
     <div class="modal-box" style="text-align: left; max-height: 80vh; overflow-y: auto;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">🪼 Selector de Modelos IA</h3>
@@ -211,7 +247,7 @@
     </div>
   </div>
 
-  <!-- MODAL MEMORIA AMPLIADA (>1000 Palabras Gratis) -->
+  <!-- MODAL MEMORIA AMPLIADA -->
   <div class="modal-overlay" id="memoryModal">
     <div class="modal-box" style="text-align: left;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">🧠 Memoria de la Partida</h3>
@@ -257,7 +293,7 @@
     </div>
   </div>
 
-  <!-- MODAL MERCADO DE APPS INMERSIVAS Y CREACIÓN -->
+  <!-- MODAL MERCADO DE APPS INMERSIVAS -->
   <div class="modal-overlay" id="marketModal">
     <div class="modal-box" style="text-align: left; max-height: 80vh; overflow-y: auto;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">🛍️ Mercado de Apps Inmersivas</h3>
@@ -266,7 +302,7 @@
       <div style="background: var(--morado-claro); padding: 12px; border-radius: 16px; margin-bottom: 14px;">
         <h5 style="color: var(--morado-oscuro);">✨ Crea tu propia App</h5>
         <p style="font-size: 0.75rem;">Descríbela a la IA, pruébala en vivo y publícala para la comunidad.</p>
-        <button class="creator-badge-btn" onclick="alert('✨ ¡Creador de Apps abierto! Describe tu función.');" style="margin-top: 6px; width: 100%;">Diseñar App</button>
+        <button class="creator-badge-btn" onclick="alert('✨ ¡Creador de Apps abierto!');" style="margin-top: 6px; width: 100%;">Diseñar App</button>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -282,49 +318,4 @@
   <!-- MODAL VALIDACIÓN DE VIDEO PARA REDES -->
   <div class="modal-overlay" id="verifyLinkModal">
     <div class="modal-box" style="text-align: left;">
-      <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">📱 Puntos por Videos Tik Tok / Redes</h3>
-      <p style="font-size: 0.78rem; color: var(--texto-muted); margin-bottom: 12px;">Pega el enlace de tu video promocional para ganar +50 puntos y activar tu estatus Creadora VIP los días 13 y 23:</p>
-      <input type="text" id="videoLinkInput" placeholder="https://www.tiktok.com/@tu_usuario/video/..." class="modal-input-field">
-      <button class="btn-main-action" onclick="submitVideoLink()">Validar y Canjear (+50)</button>
-      <button class="btn-cancel-modal" onclick="closeVerifyLinkModal()" style="width: 100%;">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- MODAL EDITAR PERFIL -->
-  <div class="modal-overlay" id="editProfileModal">
-    <div class="modal-box" style="text-align: left;">
-      <h3>Editar Perfil</h3>
-      <label style="font-size: 0.8rem; font-weight: 700;">Tu Nombre</label>
-      <input type="text" id="editNameInput" class="modal-input-field">
-      <label style="font-size: 0.8rem; font-weight: 700;">URL de Avatar / Foto</label>
-      <input type="text" id="editAvatarInput" class="modal-input-field">
-      <label style="font-size: 0.8rem; font-weight: 700;">Descripción corta</label>
-      <textarea id="editDescInput" class="modal-input-field" rows="2"></textarea>
-      <button class="btn-main-action" onclick="saveProfileChanges()" style="margin-top: 10px;">Guardar Cambios</button>
-      <button class="btn-cancel-modal" onclick="closeEditProfileModal()" style="width: 100%;">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- BARRA DE NAVEGACIÓN INFERIOR DEDICADA -->
-  <nav class="bottom-tabbar">
-    <button class="tab-btn active" onclick="switchTab('explore')">
-      <span class="tab-icon">🏠</span>
-      <span>Mundos</span>
-    </button>
-    <button class="tab-btn" onclick="openUnifiedCreation()">
-      <span class="tab-icon">📖</span>
-      <span>Historial/Crear</span>
-    </button>
-    <button class="tab-btn center-plus-btn" onclick="openUnifiedCreation()">
-      <span>🪼</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('profile')">
-      <span class="tab-icon">👤</span>
-      <span>Perfil</span>
-    </button>
-  </nav>
-
-  <script src="app.js"></script>
-</body>
-          </html>
-  
+      <h3 style
