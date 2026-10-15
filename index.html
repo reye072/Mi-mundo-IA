@@ -15,7 +15,7 @@
       <span class="gift-icon-anim" style="font-size: 4rem; display: block; margin-bottom: 12px;">🎁</span>
       <h3 style="color: var(--morado-oscuro); margin-bottom: 8px;">¡Tienes un regalo especial!</h3>
       <p style="font-size: 0.88rem; color: var(--texto-muted); margin-bottom: 22px;">Toca el regalo para abrir la carta mágica y entrar a SimulO.</p>
-      <button class="btn-main-action" onclick="openGiftAndEnter()">Abrir Regalo ✨</button>
+      <button class="btn-main-action" onclick="openGiftAndEnter()" ontouchend="openGiftAndEnter()">Abrir Regalo ✨</button>
     </div>
   </div>
 
@@ -43,7 +43,6 @@
         <p>Anime, terror, series y novelas con narrativas profundas y sin censura.</p>
       </div>
 
-      <!-- Búsqueda por Franquicia -->
       <div style="margin-bottom: 14px;">
         <input type="text" id="worldSearchInput" placeholder="🔍 Buscar anime, novela o serie..." class="modal-input-field" style="margin:0;" oninput="searchWorlds()">
       </div>
@@ -312,4 +311,4 @@
     <div class="modal-box" style="text-align: left;">
       <h3 style="color: var(--morado-oscuro); margin-bottom: 4px;">📱 Puntos por Videos Tik Tok / Redes</h3>
       <p style="font-size: 0.78rem; color: var(--texto-muted); margin-bottom: 12px;">Pega el enlace de tu video promocional para ganar +50 puntos y activar tu estatus Creadora VIP:</p>
-      <input type="text" id="videoLinkInput" placeholder="https://www.tiktok.com/@tu_usuario/video
+      <input type="text" id="videoLinkInput" placeholder="https://www.tiktok.com/@tu_usuario/video/..." c
