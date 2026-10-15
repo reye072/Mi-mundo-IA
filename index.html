@@ -26,8 +26,7 @@
       <h1>SimulO</h1>
     </div>
     <div class="header-tools" style="display: flex; gap: 8px;">
-      <button class="creator-badge-btn" onclick="openShopModal()">🛍️ Tienda</button>
-      <button class="creator-badge-btn" onclick="openTutorialModal()">❓ Ayuda</button>
+      <button class="creator-badge-btn" onclick="openTutorialModal()">? Ayuda</button>
       <button class="creator-badge-btn" id="creadoraBtn">✨ Creadora</button>
     </div>
   </header>
@@ -43,38 +42,27 @@
         <p>Anime, terror, series y novelas con narrativas profundas y sin censura.</p>
       </div>
 
+      <!-- BARRA DE BÚSQUEDA POR NOMBRE -->
       <div style="margin-bottom: 14px;">
-        <input type="text" id="worldSearchInput" placeholder="🔍 Buscar anime, novela o serie..." class="modal-input-field" style="margin:0;" oninput="searchWorlds()">
+        <input type="text" id="worldSearchInput" placeholder="🔍 Buscar anime, novela o serie..." class="modal-input-field" style="margin:0; background: white; border: 1px solid #F3E8FF; border-radius: 20px; padding: 12px 18px;" oninput="searchWorlds()">
       </div>
 
       <div class="genre-chips">
-        <button class="chip active" onclick="filterWorlds('all')">Todos (200+)</button>
+        <button class="chip active" onclick="filterWorlds('all')">Todos</button>
         <button class="chip" onclick="filterWorlds('anime')">Anime</button>
         <button class="chip" onclick="filterWorlds('terror')">Terror & Gore</button>
         <button class="chip" onclick="filterWorlds('series')">Series</button>
         <button class="chip" onclick="filterWorlds('novela')">Novelas</button>
       </div>
 
-      <h3 class="section-heading">Catálogo Masivo de Mundos</h3>
+      <h3 class="section-heading">CATÁLOGO DE MUNDOS</h3>
       <div class="worlds-custom-grid" id="worldsGridContainer"></div>
     </section>
 
-    <!-- VISTA DETALLE DEL MUNDO -->
-    <section id="view-world-detail" class="app-view">
-      <button class="btn-return" onclick="switchTab('explore')">← Volver a los mundos</button>
-      <div class="world-hero-box" id="detailBanner"></div>
-      <div class="world-info-content">
-        <h2 id="detailTitle">Título del Mundo</h2>
-        <span class="world-author">Creado por Oficial SimulO</span>
-        <p id="detailDesc" class="world-description"></p>
-        <button class="btn-main-action" onclick="openSetupModal()">▶ Jugar / Crear Partida</button>
-      </div>
-
-      <h3 class="section-heading" style="margin-top: 22px;">TUS PARTIDAS EN ESTE MUNDO</h3>
-      <div id="worldPartidasList" style="margin-bottom: 20px;"></div>
-
-      <h3 class="section-heading">Personajes y Elenco Completo</h3>
-      <div class="char-scroll-list" id="charactersList"></div>
+    <!-- VISTA HISTORIAL -->
+    <section id="view-history" class="app-view">
+      <h2 class="section-heading">Historial de Partidas</h2>
+      <div id="historyList" style="color: var(--texto-muted); font-size: 0.85rem;">No hay partidas recientes en el historial.</div>
     </section>
 
     <!-- VISTA PERFIL -->
@@ -86,7 +74,7 @@
         <span class="profile-status" id="creatorStatusBadge">Cuenta Gratuita</span>
 
         <div class="profile-stats-grid">
-          <div class="stat-item"><span class="stat-number" id="turnsCount">50</span><span class="stat-text">Turnos/Puntos</span></div>
+          <div class="stat-item"><span class="stat-number" id="turnsCount">100</span><span class="stat-text">Turnos/Puntos</span></div>
           <div class="stat-item"><span class="stat-number" id="gamesCount">0</span><span class="stat-text">Partidas</span></div>
         </div>
 
@@ -95,25 +83,20 @@
       </div>
     </section>
 
-    <!-- VISTA JUEGO / INTERFAZ DE PARTIDA -->
-    <section id="view-game" class="app-view">
-      <div class="game-header-bar">
-        <button class="btn-return" onclick="switchTab('explore')">← Cambiar Mundo</button>
-      </div>
-      <div class="chat-viewport" id="chatBox"></div>
-      <div class="chat-composer">
-        <input type="text" id="userInput" placeholder="Usa *acción* o &quot;diálogo&quot;...">
-        <button id="sendBtn" class="send-plane-btn">➤</button>
-      </div>
-    </section>
-
   </main>
 
-  <!-- BARRA DE NAVEGACIÓN INFERIOR DEDICADA -->
+  <!-- BARRA DE NAVEGACIÓN INFERIOR ORIGINAL -->
   <nav class="bottom-tabbar">
     <button class="tab-btn active" onclick="switchTab('explore')">
       <span class="tab-icon">🏠</span>
       <span>Mundos</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('history')">
+      <span class="tab-icon">📖</span>
+      <span>Historial</span>
+    </button>
+    <button class="tab-btn center-plus-btn" onclick="switchTab('explore')">
+      <span>🪼</span>
     </button>
     <button class="tab-btn" onclick="switchTab('profile')">
       <span class="tab-icon">👤</span>
