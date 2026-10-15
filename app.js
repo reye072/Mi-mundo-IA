@@ -134,6 +134,7 @@ function openGiftAndEnter() {
   switchTab('explore');
 }
 
+
 function renderWorlds(list) {
   const container = document.getElementById("worldsGridContainer");
   if (!container) return;
