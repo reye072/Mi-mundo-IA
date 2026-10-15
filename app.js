@@ -134,12 +134,16 @@ function updateUI() {
 }
 
 // ==========================================
-// REGALO DE BIENVENIDA
+// REGALO DE BIENVENIDA (CORREGIDO)
 // ==========================================
 function openGiftAndEnter() {
-  document.getElementById("giftModal").style.display = "none";
+  const giftModal = document.getElementById("giftModal");
+  if (giftModal) {
+    giftModal.style.display = "none";
+  }
   userData.turns += 25;
   updateUI();
+  switchTab('explore');
   alert("🎁 ¡Has abierto tu regalo de bienvenida! Se han acreditado +25 turnos extra a tu cuenta.");
 }
 
@@ -285,7 +289,7 @@ function confirmStartSimulation() {
   userData.gamesCount++;
   userData.turns--;
   closeSetupModal();
-  loadChatSession(newPartida);
+  loadGameSession(newPartida);
   switchTab('game');
 }
 
@@ -495,4 +499,4 @@ function toggleAdultMode() {
     alert("☀️ [Modo Estándar activado].");
     document.getElementById("secretDotBtn").style.color = "var(--texto-muted)";
   }
-  }
+      }
